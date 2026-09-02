@@ -12,10 +12,10 @@
 
 | 平台 | 安装命令 | 安装位置 |
 | --- | --- | --- |
-| **Claude Code** | `npx -y @jdpay/aipay@latest install` | `~/.claude/skills/` |
-| **Codex** | `npx -y @jdpay/aipay@latest install --codex` | `~/.agents/skills/` |
-| **Cursor** | `npx -y @jdpay/aipay@latest install --cursor` | `~/.cursor/rules/` + `~/.cursor/skills/` |
-| **全部安装** | `npx -y @jdpay/aipay@latest install --all` | 以上所有位置 |
+| **Claude Code** | `npx -y @jdpay/aipay@latest add` | `~/.claude/skills/` |
+| **Codex** | `npx -y @jdpay/aipay@latest add --codex` | `~/.agents/skills/` |
+| **Cursor** | `npx -y @jdpay/aipay@latest add --cursor` | `~/.cursor/rules/` + `~/.cursor/skills/` |
+| **全部安装** | `npx -y @jdpay/aipay@latest add --all` | 以上所有位置 |
 
 ## 🚀 核心能力
 
@@ -65,19 +65,19 @@ jd-aipay-onboarding/
 
 ```bash
 # 安装到 Claude Code（默认）
-npx -y @jdpay/aipay@latest install
+npx -y @jdpay/aipay@latest add
 
 # 安装到 Codex
-npx -y @jdpay/aipay@latest install --codex
+npx -y @jdpay/aipay@latest add --codex
 
 # 安装到 Cursor
-npx -y @jdpay/aipay@latest install --cursor
+npx -y @jdpay/aipay@latest add --cursor
 
 # 安装到所有平台
-npx -y @jdpay/aipay@latest install --all
+npx -y @jdpay/aipay@latest add --all
 ```
 
-> 卸载：`npx -y @jdpay/aipay@latest uninstall`（可加 `--codex` / `--cursor` / `--all`）
+> 卸载：`npx -y @jdpay/aipay@latest remove`（可加 `--codex` / `--cursor` / `--all`）
 
 ### 接入流程
 

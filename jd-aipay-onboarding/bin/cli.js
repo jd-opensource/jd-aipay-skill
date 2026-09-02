@@ -303,7 +303,7 @@ function install(args) {
     }
 
     console.log();
-    console.log(c.dim('  卸载：npx -y @jdpay/aipay@latest uninstall' + (targets.length > 1 ? ' --all' : '')));
+    console.log(c.dim('  卸载：npx -y @jdpay/aipay@latest remove' + (targets.length > 1 ? ' --all' : '')));
   } else {
     console.log(c.yellow('  ⚠  未成功安装任何平台，请检查上方提示'));
   }
@@ -330,7 +330,7 @@ function uninstall(args) {
 
   console.log(c.green('  ✅ 卸载完成'));
   console.log();
-  console.log(c.dim('  重新安装：npx -y @jdpay/aipay@latest install'));
+  console.log(c.dim('  重新安装：npx -y @jdpay/aipay@latest add'));
   console.log();
 }
 
@@ -340,12 +340,12 @@ function showHelp() {
   ${c.bold('⚡ @jdpay/aipay')} — 京东 AI付 Skill 安装器
 
   ${c.bold('用法：')}
-    npx -y @jdpay/aipay@latest install             安装到 Claude Code ${c.dim('(默认)')}
-    npx -y @jdpay/aipay@latest install --codex      安装到 Codex
-    npx -y @jdpay/aipay@latest install --cursor     安装到 Cursor
-    npx -y @jdpay/aipay@latest install --all        安装到所有平台
-    npx -y @jdpay/aipay@latest install --force      覆盖已有安装
-    npx -y @jdpay/aipay@latest uninstall            卸载 ${c.dim('(可加 --codex / --cursor / --all)')}
+    npx -y @jdpay/aipay@latest add                 安装到 Claude Code ${c.dim('(默认)')}
+    npx -y @jdpay/aipay@latest add --codex          安装到 Codex
+    npx -y @jdpay/aipay@latest add --cursor         安装到 Cursor
+    npx -y @jdpay/aipay@latest add --all            安装到所有平台
+    npx -y @jdpay/aipay@latest add --force          覆盖已有安装
+    npx -y @jdpay/aipay@latest remove               卸载 ${c.dim('(可加 --codex / --cursor / --all)')}
 
   ${c.bold('支持的平台：')}
     Claude Code   安装到 ~/.claude/skills/
@@ -370,11 +370,12 @@ const args = process.argv.slice(2);
 const command = args[0];
 
 switch (command) {
+  case 'add':
   case 'install':
     install(args.slice(1));
     break;
-  case 'uninstall':
   case 'remove':
+  case 'uninstall':
     uninstall(args.slice(1));
     break;
   case '--help':
