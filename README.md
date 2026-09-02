@@ -6,7 +6,16 @@
 
 ## ✨ 这是什么
 
-这是一个 **Claude Code Skill**，为商户提供京东 AI付服务端接入的一站式 AI 引导体验。只需在 Claude Code 中说 **"帮我接入 AI付"**，即可自动完成代码集成、沙箱联调、生产配置替换和上线验证。
+这是一个 **AI 编程工具 Skill**，为商户提供京东 AI付服务端接入的一站式 AI 引导体验。只需在 AI 编程工具中说 **"帮我接入 AI付"**，即可自动完成代码集成、沙箱联调、生产配置替换和上线验证。
+
+## 🤖 支持的平台
+
+| 平台 | 安装命令 | 安装位置 |
+| --- | --- | --- |
+| **Claude Code** | `npx -y @jdpay/aipay@latest install` | `~/.claude/skills/` |
+| **Codex** | `npx -y @jdpay/aipay@latest install --codex` | `~/.agents/skills/` |
+| **Cursor** | `npx -y @jdpay/aipay@latest install --cursor` | `~/.cursor/rules/` + `~/.cursor/skills/` |
+| **全部安装** | `npx -y @jdpay/aipay@latest install --all` | 以上所有位置 |
 
 ## 🚀 核心能力
 
@@ -50,21 +59,29 @@ jd-aipay-onboarding/
 
 ## 📖 使用方式
 
-### 一键安装（推荐）
+### 一键安装
 
-确保已安装 [Claude Code](https://docs.anthropic.com/en/docs/claude-code) 和 Node.js（≥14），运行：
+确保已安装 Node.js（≥14），运行：
 
 ```bash
+# 安装到 Claude Code（默认）
 npx -y @jdpay/aipay@latest install
+
+# 安装到 Codex
+npx -y @jdpay/aipay@latest install --codex
+
+# 安装到 Cursor
+npx -y @jdpay/aipay@latest install --cursor
+
+# 安装到所有平台
+npx -y @jdpay/aipay@latest install --all
 ```
 
-安装完成后技能会自动注册到 `~/.claude/skills/jd-aipay-onboarding/`。
-
-> 卸载：`npx -y @jdpay/aipay@latest uninstall`
+> 卸载：`npx -y @jdpay/aipay@latest uninstall`（可加 `--codex` / `--cursor` / `--all`）
 
 ### 接入流程
 
-在你的服务端项目目录下打开 Claude Code，说：
+在你的服务端项目目录下打开 AI 编程工具，说：
 
 ```
 帮我接入 AI付

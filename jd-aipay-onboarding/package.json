@@ -1,7 +1,7 @@
 {
   "name": "@jdpay/aipay",
   "version": "1.0.0",
-  "description": "京东AI付一站式接入 — Claude Code Skill 安装器",
+  "description": "京东AI付一站式接入 Skill — 支持 Claude Code / Codex / Cursor",
   "bin": {
     "jdpay-aipay": "./bin/cli.js"
   },
@@ -17,7 +17,11 @@
     "jdpay",
     "aipay",
     "claude-code",
+    "codex",
+    "cursor",
+    "agents-md",
     "skill",
+    "ai-coding",
     "京东",
     "AI付"
   ],
