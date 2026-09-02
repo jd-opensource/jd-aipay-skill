@@ -1,0 +1,30 @@
+{
+  "name": "@jdpay/aipay",
+  "version": "1.0.0",
+  "description": "京东AI付一站式接入 — Claude Code Skill 安装器",
+  "bin": {
+    "jdpay-aipay": "./bin/cli.js"
+  },
+  "files": [
+    "bin/",
+    "SKILL.md",
+    "playbooks/",
+    "reference/",
+    "assets/",
+    "scripts/"
+  ],
+  "keywords": [
+    "jdpay",
+    "aipay",
+    "claude-code",
+    "skill",
+    "京东",
+    "AI付"
+  ],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jd-opensource/jd-aipay-skill.git",
+    "directory": "jd-aipay-onboarding"
+  }
+}

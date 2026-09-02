@@ -1,0 +1,12 @@
+{
+  "name": "aipay-nodejs-demo",
+  "version": "1.0.0",
+  "description": "AI 付外场接口 Node.js Demo（SM2 数字信封 + HMAC-SM3 签名，与 Java/Python 版协议兼容）",
+  "private": true,
+  "engines": {
+    "node": ">=16"
+  },
+  "dependencies": {
+    "sm-crypto": "^0.3.13"
+  }
+}
