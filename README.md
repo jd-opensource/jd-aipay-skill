@@ -10,12 +10,11 @@
 
 ## 🤖 支持的平台
 
-| 平台 | 安装命令 | 安装位置 |
-| --- | --- | --- |
-| **Claude Code** | `npx skills add jd-opensource/jd-aipay-skill` | `~/.claude/skills/` |
-| **Codex** | `npx skills add jd-opensource/jd-aipay-skill` | `~/.agents/skills/` |
-| **Cursor** | `npx skills add jd-opensource/jd-aipay-skill` | `~/.cursor/skills/` |
-| **全部安装** | `npx skills add jd-opensource/jd-aipay-skill -g` | 以上所有位置 |
+Claude Code · Codex · Cursor · GitHub Copilot 等主流 AI 编程工具，一条命令自动安装：
+
+```bash
+npx skills add jd-opensource/jd-aipay-skill
+```
 
 ## 🚀 核心能力
 
