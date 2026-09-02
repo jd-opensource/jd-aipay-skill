@@ -12,10 +12,10 @@
 
 | 平台 | 安装命令 | 安装位置 |
 | --- | --- | --- |
-| **Claude Code** | `npx -y @jdpay/aipay@latest add` | `~/.claude/skills/` |
-| **Codex** | `npx -y @jdpay/aipay@latest add --codex` | `~/.agents/skills/` |
-| **Cursor** | `npx -y @jdpay/aipay@latest add --cursor` | `~/.cursor/rules/` + `~/.cursor/skills/` |
-| **全部安装** | `npx -y @jdpay/aipay@latest add --all` | 以上所有位置 |
+| **Claude Code** | `npx skills add jd-opensource/jd-aipay-skill` | `~/.claude/skills/` |
+| **Codex** | `npx skills add jd-opensource/jd-aipay-skill` | `~/.agents/skills/` |
+| **Cursor** | `npx skills add jd-opensource/jd-aipay-skill` | `~/.cursor/skills/` |
+| **全部安装** | `npx skills add jd-opensource/jd-aipay-skill -g` | 以上所有位置 |
 
 ## 🚀 核心能力
 
@@ -64,20 +64,14 @@ jd-aipay-onboarding/
 确保已安装 Node.js（≥14），运行：
 
 ```bash
-# 安装到 Claude Code（默认）
-npx -y @jdpay/aipay@latest add
-
-# 安装到 Codex
-npx -y @jdpay/aipay@latest add --codex
-
-# 安装到 Cursor
-npx -y @jdpay/aipay@latest add --cursor
+# 安装（自动检测当前 AI 编程工具）
+npx skills add jd-opensource/jd-aipay-skill
 
 # 安装到所有平台
-npx -y @jdpay/aipay@latest add --all
+npx skills add jd-opensource/jd-aipay-skill -g
 ```
 
-> 卸载：`npx -y @jdpay/aipay@latest remove`（可加 `--codex` / `--cursor` / `--all`）
+> 卸载：`npx skills remove jd-aipay-onboarding`（可加 `-g` 全局卸载）
 
 ### 接入流程
 
