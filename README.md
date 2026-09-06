@@ -6,7 +6,7 @@
 
 ## ✨ 这是什么
 
-这是一个 **AI 编程工具 Skill**，为商户提供京东 AI付**服务端 + 客户端**的一站式 AI 引导体验。只需在 AI 编程工具中说 **"帮我接入 AI付"**，即可自动完成代码集成、沙箱联调、生产配置替换和上线验证。
+这是一个 **AI 编程工具 Skill**，为商户提供京东 AI付服务端接入的一站式 AI 引导体验。只需在 AI 编程工具中说 **"帮我接入 AI付"**，即可自动完成代码集成、沙箱联调、生产配置替换和上线验证。
 
 ## 🤖 支持的平台
 
@@ -18,7 +18,6 @@ npx skills add jd-opensource/jd-aipay-skill
 
 ## 🚀 核心能力
 
-### 服务端接入
 | 能力 | 说明 |
 | --- | --- |
 | **服务端代码集成** | 自动识别 Java / Node.js / Python 项目，在现有工程中完成支付接口代码集成 |
@@ -27,16 +26,6 @@ npx skills add jd-opensource/jd-aipay-skill
 | **生产配置替换** | 协助将沙箱配置切换为生产环境，敏感信息自动脱敏 |
 | **上线验证** | 引导小额真实交易验证，确保支付链路端到端跑通 |
 | **接入答疑** | 覆盖接口字段、签名加密、状态码、错误码等常见问题 |
-
-### 客户端 SDK 集成
-| 能力 | 说明 |
-| --- | --- |
-| **iOS SDK 集成** | 自动检测 Xcode 项目，集成 JDPay.xcframework，配置初始化和支付调用 |
-| **Android SDK 集成** | 自动检测 Android 项目，集成 AI付 AAR，配置 Gradle 依赖和支付流程 |
-| **标品支付** | 支持收银台支付和声纹支付两种模式 |
-| **眼镜支付** | 支持智能眼镜端支付（预留，建设中） |
-| **冒烟测试** | 自动生成测试代码，验证 SDK 初始化和支付调用 |
-| **故障排查** | 提供构建失败、运行时错误等常见问题的解决方案 |
 
 ## 📁 项目结构
 
@@ -55,18 +44,7 @@ jd-aipay-onboarding/
 │   ├── 08-certificate-secret-guide.md # 证书密钥指引
 │   ├── 09-production-cutover.md      # 生产配置替换
 │   ├── 10-go-live-verification.md    # 上线验证
-│   ├── 11-client-sdk-guidance.md     # 客户端 SDK 指引
-│   ├── 12-client-sdk-integration-entry.md # 客户端 SDK 集成入口
-│   └── client-sdk/                   # 客户端 SDK 集成文档
-│       ├── standard/                 # 标品支付（iOS/Android）
-│       │   ├── jdaipay-integration.md # 主流程
-│       │   ├── ios.md                # iOS 详细步骤
-│       │   └── android.md            # Android 详细步骤
-│       ├── glasses/                  # 眼镜支付（预留）
-│       │   ├── jdaipay-glasses.md    # 主流程
-│       │   ├── ios.md                # iOS 步骤
-│       │   └── android.md            # Android 步骤
-│       └── notes.md                  # 故障排查与注意事项
+│   └── 11-client-sdk-guidance.md     # 客户端 SDK 指引
 ├── reference/                        # 知识库
 │   ├── api/                          # 接口协议、签名、加密、参数、状态码
 │   └── product/                      # 产品认知、开通、实名、证书、密钥 QA
@@ -76,10 +54,7 @@ jd-aipay-onboarding/
 │       ├── nodejs-quickstart/        # Node.js 示例工程
 │       └── python-quickstart/        # Python 示例工程
 └── scripts/                          # 辅助脚本
-    ├── render_server_example.sh      # 服务端示例渲染
-    └── client-sdk-scripts/           # 客户端 SDK 脚本
-        ├── detect_env.sh             # 平台检测
-        └── download_sdk.sh           # SDK 下载
+    └── render_server_example.sh      # 服务端示例渲染
 ```
 
 ## 📖 使用方式
@@ -99,8 +74,6 @@ npx skills add jd-opensource/jd-aipay-skill -g
 > 卸载：`npx skills remove jd-aipay-onboarding`（可加 `-g` 全局卸载）
 
 ### 接入流程
-
-#### 服务端接入
 
 在你的服务端项目目录下打开 AI 编程工具，说：
 
@@ -124,61 +97,17 @@ Skill 会按以下流程自动推进：
 6. **生产配置替换** — 将沙箱配置安全替换为生产配置
 7. **上线验证** — 小额真实交易验证支付链路
 
-#### 客户端 SDK 集成
-
-在你的 iOS 或 Android 项目目录下打开 AI 编程工具，说：
-
-```
-iOS App 接入京东 AI付
-```
-
-或：
-
-```
-Android 项目集成 JD Pay SDK
-```
-
-Skill 会按以下流程自动推进：
-
-1. **平台检测** — 识别 iOS（Xcode）或 Android（Gradle）项目
-2. **SDK 下载** — 自动下载或引导提供 JDPay.xcframework / AAR
-3. **SDK 集成** — 自动添加依赖、配置 framework、修改 build.gradle
-4. **初始化配置** — 生成 SDK 初始化代码（AppDelegate / Application）
-5. **支付调用** — 生成支付接口调用示例代码
-6. **冒烟测试** — 编译项目并验证 SDK 初始化成功
-7. **中文报告** — 输出集成报告和后续联调建议
-
-#### 全栈接入
-
-如果需要同时完成服务端和客户端接入，说：
-
-```
-完整接入京东 AI付，包括 Spring Boot 后端和 iOS App
-```
-
-Skill 会按顺序推进：服务端接入 → 客户端 SDK 集成 → 端到端联调建议
-
 ### 仅咨询问题
 
 不需要做代码集成时，也可以直接提问：
 
-**服务端相关**：
 ```
 AI付的签名规则是什么？
 createOrder 接口的 bizContent 怎么加密？
 沙箱环境报 ILLEGAL_SIGN 怎么排查？
 ```
 
-**客户端相关**：
-```
-iOS SDK 的 registeredService 方法怎么用？
-Android AAR 怎么导入到项目？
-JDPay.xcframework 编译失败怎么办？
-```
-
-## 🔗 支持的能力
-
-### 服务端接口
+## 🔗 支持的接口
 
 | 接口 | 说明 |
 | --- | --- |
@@ -186,13 +115,6 @@ JDPay.xcframework 编译失败怎么办？
 | `queryPayResult` | 查询支付结果 |
 | `refund` | 发起退款 |
 | `queryRefundResult` | 查询退款结果 |
-
-### 客户端 SDK
-
-| 平台 | SDK | 支持能力 |
-| --- | --- | --- |
-| iOS | JDPay.xcframework | 标品支付（收银台/声纹）、眼镜支付（预留） |
-| Android | JDAIPaySDK.aar | 标品支付（收银台/声纹）、眼镜支付（预留） |
 
 ## 🌐 常用链接
 
