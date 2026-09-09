@@ -21,7 +21,7 @@ from aipay_demo.utils.common import (
 )
 
 ENV = "__ENV__"                       # pre | prod | sandbox
-SM2_JD_PUB = "__SM2_JD_PUB__"         # 京东 SM2 公钥证书 Base64 —— 敏感参数，由用户按环境提供
+SM2_JD_PUB = "__SM2_JD_PUB__"         # 京东 SM2 公钥证书 Base64 —— 内置共享公钥（assets/certs/jd-sm2-pub.b64），由 render_server_example.sh 自动注入，无需商户提供
 
 SECRET_KEY = "__SECRET_KEY__"
 PFX_BASE64 = "__PFX_BASE64__"

@@ -14,7 +14,7 @@
 #   pfx_base64        商户 pfx 文件 base64（与 pfx_path 二选一）
 #   pfx_path          商户 pfx 文件路径（与 pfx_base64 二选一，脚本自动 base64）
 #   pfx_password      pfx 密码
-#   sm2_jd_pub        京东 SM2 公钥证书 Base64（由用户按环境提供；pre/prod 使用同一份，sandbox 使用沙箱证书）
+#   sm2_jd_pub        京东 SM2 公钥证书 Base64（可选；缺省使用 skill 内置共享公钥 assets/certs/jd-sm2-pub.b64，pre/prod 通用，用户提供时覆盖默认）
 #   agent_id
 #   app_id
 #   merchant_no
@@ -60,10 +60,10 @@ if [[ -e "$TARGET" ]]; then
   exit 1
 fi
 
-python3 - "$CONFIG" "$TARGET" "$EXAMPLES_DIR" <<'PYEOF'
+python3 - "$CONFIG" "$TARGET" "$EXAMPLES_DIR" "$SKILL_DIR" <<'PYEOF'
 import os, sys, shutil, base64, re
 
-config_path, target, examples_dir = sys.argv[1], sys.argv[2], sys.argv[3]
+config_path, target, examples_dir, skill_dir = sys.argv[1], sys.argv[2], sys.argv[3], sys.argv[4]
 
 def parse_kv(p):
     d = {}
@@ -145,12 +145,21 @@ if not pfx_b64:
     with open(pfx_path, 'rb') as f:
         pfx_b64 = base64.b64encode(f.read()).decode('ascii')
 
+# sm2_jd_pub 可选：缺省使用 skill 内置共享京东公钥证书（pre/prod 通用）
+sm2_jd_pub = kv.get('sm2_jd_pub', '').strip()
+if not sm2_jd_pub:
+    cert_path = os.path.join(skill_dir, 'assets', 'certs', 'jd-sm2-pub.b64')
+    if not os.path.isfile(cert_path):
+        print(f"[ERR] 未提供 sm2_jd_pub，且内置共享公钥缺失: {cert_path}", file=sys.stderr); sys.exit(2)
+    with open(cert_path, 'r', encoding='ascii') as f:
+        sm2_jd_pub = ''.join(f.read().split())
+
 placeholders = {
     '__ENV__':             env,
     '__SECRET_KEY__':      need('secret_key'),
     '__PFX_BASE64__':      pfx_b64,
     '__PFX_PASSWORD__':    need('pfx_password'),
-    '__SM2_JD_PUB__':      need('sm2_jd_pub'),
+    '__SM2_JD_PUB__':      sm2_jd_pub,
     '__ENDPOINT_URL__':    endpoint_url,
     '__APP_ID__':          need('app_id'),
     '__AGENT_ID__':        need('agent_id'),
