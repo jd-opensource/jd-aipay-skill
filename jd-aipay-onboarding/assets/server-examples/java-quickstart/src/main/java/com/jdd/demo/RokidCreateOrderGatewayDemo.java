@@ -42,7 +42,7 @@ public class RokidCreateOrderGatewayDemo {
     /** 环境标识：pre / prod / sandbox，由 render 脚本替换 */
     private static final String ENV = "__ENV__";
 
-    /** 京东 SM2 公钥证书 Base64 —— 敏感参数，由用户按环境提供（pre/prod 使用同一份，sandbox 使用沙箱证书） */
+    /** 京东 SM2 公钥证书 Base64 —— 内置共享公钥（assets/certs/jd-sm2-pub.b64），由 render_server_example.sh 自动注入，无需商户提供 */
     private static final String SM2_JD_PUB = "__SM2_JD_PUB__";
 
     /** 签名密钥（HMAC-SM3）—— 敏感参数，由用户提供 */
