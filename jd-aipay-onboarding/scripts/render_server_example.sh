@@ -9,7 +9,8 @@
 #   language          语言: java（默认） | python | nodejs
 #   interface         接口: createOrder | queryPayResult | refund | queryRefundResult
 #   env               环境: pre | prod | sandbox
-#   base_url          环境域名（不含 /api 与尾斜杠）, 如 https://ridepassfront-pre.jd.com
+#   base_url          环境域名（不含 /api 与尾斜杠）, 如 https://ridepassfront-pre.jd.com；env=sandbox 时可省略（内置 https://fpitest.jd.com）
+#   sandbox_id        沙箱实例 ID —— 仅 env=sandbox 时必填，商户在平台创建沙箱后获得，脚本将其追加在接口路径后
 #   secret_key        HMAC-SM3 密钥
 #   pfx_base64        商户 pfx 文件 base64（与 pfx_path 二选一）
 #   pfx_path          商户 pfx 文件路径（与 pfx_base64 二选一，脚本自动 base64）
@@ -36,7 +37,7 @@ SKILL_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 EXAMPLES_DIR="$SKILL_DIR/assets/server-examples"
 
 usage() {
-  sed -n '3,30p' "$0"
+  sed -n '3,32p' "$0"
 }
 
 while [[ $# -gt 0 ]]; do
@@ -93,7 +94,12 @@ if language not in ('java', 'python', 'nodejs'):
 
 iface = need('interface')
 env = need('env').lower()
-base_url = need('base_url').rstrip('/')
+
+# 沙箱环境使用内置域名；pre/prod 必须提供 base_url
+if env == 'sandbox':
+    base_url = (kv.get('base_url', '').strip() or 'https://fpitest.jd.com').rstrip('/')
+else:
+    base_url = need('base_url').rstrip('/')
 
 # accessType：接入类型，SERVICE_MER 服务商 / COMMON 普通商户，由用户选择
 access_type = need('access_type').strip().upper()
@@ -131,8 +137,13 @@ if env not in ('pre', 'prod', 'sandbox'):
     print(f"[ERR] env 非法: {env}, 应为 pre|prod|sandbox", file=sys.stderr); sys.exit(2)
 
 main_entry, path_suffix = iface_map[iface]
-# base_url 是环境域名（不含 /api），/api 由脚本统一拼接到 endpoint
-endpoint_url = f"{base_url}/api/{path_suffix}"
+# base_url 是环境域名（不含 /api），/api 由脚本统一拼接到 endpoint；
+# 沙箱环境将商户自填的沙箱实例 ID 追加在接口路径后
+if env == 'sandbox':
+    sandbox_id = need('sandbox_id')
+    endpoint_url = f"{base_url}/api/{path_suffix}/{sandbox_id}"
+else:
+    endpoint_url = f"{base_url}/api/{path_suffix}"
 
 # pfx 来源：优先 pfx_base64；否则 pfx_path
 pfx_b64 = kv.get('pfx_base64', '').strip()
