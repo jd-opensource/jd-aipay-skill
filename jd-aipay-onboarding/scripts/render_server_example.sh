@@ -111,6 +111,10 @@ secret_key = kv.get('secret_key', '').strip()
 pfx_b64 = kv.get('pfx_base64', '').strip()
 pfx_path = kv.get('pfx_path', '').strip()
 pfx_password = kv.get('pfx_password', '').strip()
+app_id = kv.get('app_id', '').strip()
+agent_id = kv.get('agent_id', '').strip()
+merchant_no = kv.get('merchant_no', '').strip()
+acq_merchant_no = kv.get('acq_merchant_no', '').strip()
 if env == 'sandbox':
     if not secret_key:
         secret_key = 'test'
@@ -300,10 +304,52 @@ if leftover:
         print(f"  {m}  @ {p}", file=sys.stderr)
     sys.exit(3)
 
+# 生成工程根目录的 aipay.env：全部可替换配置项的唯一入口（支付宝式交互）
+if env == 'sandbox':
+    env_label = '沙箱环境'
+    endpoint_note = '# 接口完整地址。【替换】末尾的沙箱实例 ID 为你自己的'
+else:
+    env_label = '预发环境' if env == 'pre' else '生产环境'
+    endpoint_note = '# 接口完整地址'
+env_text = f"""# =====================================================
+# 京东 AI 付接入配置（{env_label}）
+# 本文件是本工程唯一需要编辑的配置：切换环境、更换密钥/证书/商户信息，改这里即可。
+# 标注【替换】的值请改成你自己的；其余为当前环境已生效的值。
+# =====================================================
+
+# 环境：pre（预发）/ prod（生产）/ sandbox（沙箱）
+AIPAY_ENV={env}
+
+{endpoint_note}
+AIPAY_ENDPOINT_URL={endpoint_url}
+
+# 应用与渠道标识 【替换：平台「应用信息」页分配的值】
+AIPAY_APP_ID={app_id}
+AIPAY_AGENT_ID={agent_id}
+
+# 商户号与接入类型 【替换：平台分配的商户号；COMMON 普通商户 / SERVICE_MER 服务商】
+AIPAY_MERCHANT_NO={merchant_no}
+AIPAY_ACQ_MERCHANT_NO={acq_merchant_no}
+AIPAY_ACCESS_TYPE={access_type}
+
+# HMAC-SM3 签名密钥 【替换：平台「密钥配置」页获取（沙箱固定为 test）】
+AIPAY_SECRET_KEY={secret_key}
+
+# 京东 SM2 公钥证书 Base64（信封加密用；已按当前环境内置，无需替换）
+AIPAY_PUBLIC_KEY={sm2_jd_pub}
+
+# 商户私钥证书（PFX）Base64 与密码 【替换：你自己的商户证书；沙箱环境已内置公共测试私钥，无需替换】
+AIPAY_MERCHANT_PFX={pfx_b64}
+AIPAY_MERCHANT_PFX_PASSWORD={pfx_password}
+"""
+with open(os.path.join(target, 'aipay.env'), 'w', encoding='utf-8') as f:
+    f.write(env_text)
+
 print(f"[OK] 已生成 {language} 工程: {target}")
 print(f"     接口: {iface}")
 print(f"     环境: {env}")
 print(f"     Endpoint: {endpoint_url}")
+print(f"     配置文件: {os.path.join(target, 'aipay.env')}（全部可替换值集中在此，改完即生效）")
 if language == 'java':
     print(f"     mainClass: com.jdd.demo.{main_entry}")
     print(f"     运行: cd {target} && mvn -q compile exec:java")
