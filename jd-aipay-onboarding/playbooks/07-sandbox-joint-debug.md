@@ -11,7 +11,7 @@
 | 网关域名 | `https://fpitest.jd.com` |
 | 接口路径 | `{域名}/api/pay-ai-agent/<接口名>/{沙箱实例ID}` |
 | 沙箱实例 ID | 商户在平台创建沙箱后获得（如 `2099854417468633089`），**由用户自行填写**，追加在接口路径后 |
-| 京东 SM2 公钥 | 与 pre/prod 共用内置共享证书（`assets/certs/jd-sm2-pub.b64`），沙箱无单独公钥时无需额外配置 |
+| 京东 SM2 公钥 | 沙箱独立公钥，内置在 `assets/certs/jd-sm2-pub-sandbox.b64`（选 `env=sandbox` 时自动注入，与 pre/prod 共享证书**不同**，无需额外配置） |
 
 使用 `scripts/render_server_example.sh` 渲染时：`env=sandbox` + `sandbox_id=<你的沙箱实例ID>`，`base_url` 可省略。
 

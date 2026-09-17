@@ -15,7 +15,7 @@
 #   pfx_base64        商户 pfx 文件 base64（与 pfx_path 二选一）
 #   pfx_path          商户 pfx 文件路径（与 pfx_base64 二选一，脚本自动 base64）
 #   pfx_password      pfx 密码
-#   sm2_jd_pub        京东 SM2 公钥证书 Base64（可选；缺省使用 skill 内置共享公钥 assets/certs/jd-sm2-pub.b64，pre/prod 通用，用户提供时覆盖默认）
+#   sm2_jd_pub        京东 SM2 公钥证书 Base64（可选；缺省按环境自动选择——sandbox 用 assets/certs/jd-sm2-pub-sandbox.b64，pre/prod 用 assets/certs/jd-sm2-pub.b64，用户提供时覆盖默认）
 #   agent_id
 #   app_id
 #   merchant_no
@@ -156,12 +156,13 @@ if not pfx_b64:
     with open(pfx_path, 'rb') as f:
         pfx_b64 = base64.b64encode(f.read()).decode('ascii')
 
-# sm2_jd_pub 可选：缺省使用 skill 内置共享京东公钥证书（pre/prod 通用）
+# sm2_jd_pub 可选：缺省按环境取内置公钥——沙箱用沙箱公钥，pre/prod 用共享公钥
 sm2_jd_pub = kv.get('sm2_jd_pub', '').strip()
 if not sm2_jd_pub:
-    cert_path = os.path.join(skill_dir, 'assets', 'certs', 'jd-sm2-pub.b64')
+    cert_name = 'jd-sm2-pub-sandbox.b64' if env == 'sandbox' else 'jd-sm2-pub.b64'
+    cert_path = os.path.join(skill_dir, 'assets', 'certs', cert_name)
     if not os.path.isfile(cert_path):
-        print(f"[ERR] 未提供 sm2_jd_pub，且内置共享公钥缺失: {cert_path}", file=sys.stderr); sys.exit(2)
+        print(f"[ERR] 未提供 sm2_jd_pub，且内置公钥缺失: {cert_path}", file=sys.stderr); sys.exit(2)
     with open(cert_path, 'r', encoding='ascii') as f:
         sm2_jd_pub = ''.join(f.read().split())
 
