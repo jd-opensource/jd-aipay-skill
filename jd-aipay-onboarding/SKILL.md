@@ -60,13 +60,17 @@ description: "京东 AI付一站式接入 Agent。Use this skill whenever the us
 
 ### 服务端接入流程
 1. 阅读 `playbooks/02-detect-server-project.md` 和对应语言 playbook
-2. 在现有项目内完成代码集成（createOrder / queryPayResult / refund / queryRefundResult）
-3. 代码集成完成后，立即阅读 `playbooks/06-product-opening-parallel-reminder.md`，提醒尽快安排产品开通
-4. 执行沙箱联调，记录接口、环境、请求结果、错误原因和下一步建议
-5. 沙箱联调通过后，按 `playbooks/08-certificate-secret-guide.md` 引导用户确认实名认证、证书和生产密钥
-6. 用户提供生产配置后，协助完成配置替换（避免完整敏感信息暴露）
-7. 按 `playbooks/10-go-live-verification.md` 引导小额真实交易和上线验证
-8. 输出阶段性接入报告：已完成项、证据、待用户处理事项、下一步
+2. **确认目标环境（三选一，主动询问用户）**：
+   - **沙箱**（首次接入推荐）：网关 `https://fpitest.jd.com`，接口路径需追加商户的**沙箱实例 ID**；SM3 密钥（`test`）、商户测试私钥、京东公钥全部内置，用户只需提供沙箱实例 ID，详见 `playbooks/07-sandbox-joint-debug.md`
+   - **预发**：网关 `https://ridepassfront-pre.jd.com`，需用户提供商户证书（pfx Base64/文件路径）与 SM3 密钥
+   - **生产**：网关 `https://sse.jd.com`，配置要求同预发，且须完成生产侧证书与密钥登记
+3. 在现有项目内完成代码集成（createOrder / queryPayResult / refund / queryRefundResult）
+4. 代码集成完成后，立即阅读 `playbooks/06-product-opening-parallel-reminder.md`，提醒尽快安排产品开通
+5. 执行联调（按所选环境），记录接口、环境、请求结果、错误原因和下一步建议
+6. 沙箱/预发联调通过后，按 `playbooks/08-certificate-secret-guide.md` 引导用户确认实名认证、证书和生产密钥
+7. 用户提供生产配置后，协助完成配置替换（避免完整敏感信息暴露）
+8. 按 `playbooks/10-go-live-verification.md` 引导小额真实交易和上线验证
+9. 输出阶段性接入报告：已完成项、证据、待用户处理事项、下一步
 
 ### 客户端 SDK 集成流程
 1. 识别平台（iOS 或 Android）：

@@ -11,10 +11,10 @@
 #   env               环境: pre | prod | sandbox
 #   base_url          环境域名（不含 /api 与尾斜杠）, 如 https://ridepassfront-pre.jd.com；env=sandbox 时可省略（内置 https://fpitest.jd.com）
 #   sandbox_id        沙箱实例 ID —— 仅 env=sandbox 时必填，商户在平台创建沙箱后获得，脚本将其追加在接口路径后
-#   secret_key        HMAC-SM3 密钥
-#   pfx_base64        商户 pfx 文件 base64（与 pfx_path 二选一）
+#   secret_key        HMAC-SM3 密钥（env=sandbox 时可省略，固定为 "test"）
+#   pfx_base64        商户 pfx 文件 base64（与 pfx_path 二选一；env=sandbox 时可省略，缺省用内置沙箱测试私钥）
 #   pfx_path          商户 pfx 文件路径（与 pfx_base64 二选一，脚本自动 base64）
-#   pfx_password      pfx 密码
+#   pfx_password      pfx 密码（env=sandbox 时可省略，缺省为内置沙箱测试私钥密码）
 #   sm2_jd_pub        京东 SM2 公钥证书 Base64（可选；缺省按环境自动选择——sandbox 用 assets/certs/jd-sm2-pub-sandbox.b64，pre/prod 用 assets/certs/jd-sm2-pub.b64，用户提供时覆盖默认）
 #   agent_id
 #   app_id
@@ -106,6 +106,29 @@ access_type = need('access_type').strip().upper()
 if access_type not in ('SERVICE_MER', 'COMMON'):
     print(f"[ERR] access_type 非法: {access_type}, 应为 SERVICE_MER|COMMON", file=sys.stderr); sys.exit(2)
 
+# 沙箱环境密钥与商户测试证书全部内置：secret_key 固定 "test"，私钥/密码用内置沙箱物料，商户无需提供
+secret_key = kv.get('secret_key', '').strip()
+pfx_b64 = kv.get('pfx_base64', '').strip()
+pfx_path = kv.get('pfx_path', '').strip()
+pfx_password = kv.get('pfx_password', '').strip()
+if env == 'sandbox':
+    if not secret_key:
+        secret_key = 'test'
+    if not pfx_b64 and not pfx_path:
+        sandbox_pfx = os.path.join(skill_dir, 'assets', 'certs', 'jd-merchant-pfx-sandbox.b64')
+        if not os.path.isfile(sandbox_pfx):
+            print(f"[ERR] 沙箱内置商户测试私钥缺失: {sandbox_pfx}", file=sys.stderr); sys.exit(2)
+        with open(sandbox_pfx, 'r', encoding='ascii') as f:
+            pfx_b64 = ''.join(f.read().split())
+    if not pfx_password:
+        pfx_password = 'gnvy4aQDs15VIU8H'
+else:
+    # pre/prod 无内置物料，密钥与证书仍为必填
+    if not secret_key:
+        print("[ERR] 配置缺少必填字段: secret_key", file=sys.stderr); sys.exit(2)
+    if not pfx_password:
+        print("[ERR] 配置缺少必填字段: pfx_password", file=sys.stderr); sys.exit(2)
+
 # 接口映射：不同语言使用不同的主入口文件名 / 模块
 JAVA_IFACE_MAP = {
     'createOrder':       ('RokidCreateOrderGatewayDemo',   'pay-ai-agent/createOrder'),
@@ -145,9 +168,7 @@ if env == 'sandbox':
 else:
     endpoint_url = f"{base_url}/api/{path_suffix}"
 
-# pfx 来源：优先 pfx_base64；否则 pfx_path
-pfx_b64 = kv.get('pfx_base64', '').strip()
-pfx_path = kv.get('pfx_path', '').strip()
+# pfx 来源：优先 pfx_base64；否则 pfx_path（沙箱环境缺省时已在上方注入内置测试私钥）
 if not pfx_b64:
     if not pfx_path:
         print("[ERR] 必须提供 pfx_base64 或 pfx_path 之一", file=sys.stderr); sys.exit(2)
@@ -168,9 +189,9 @@ if not sm2_jd_pub:
 
 placeholders = {
     '__ENV__':             env,
-    '__SECRET_KEY__':      need('secret_key'),
+    '__SECRET_KEY__':      secret_key,
     '__PFX_BASE64__':      pfx_b64,
-    '__PFX_PASSWORD__':    need('pfx_password'),
+    '__PFX_PASSWORD__':    pfx_password,
     '__SM2_JD_PUB__':      sm2_jd_pub,
     '__ENDPOINT_URL__':    endpoint_url,
     '__APP_ID__':          need('app_id'),
