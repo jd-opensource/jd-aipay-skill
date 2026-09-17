@@ -1,6 +1,6 @@
 ---
 name: jd-aipay-onboarding
-description: "京东 AI付一站式接入 Agent。Use this skill whenever the user wants to 接入/集成/联调/上线 京东AI付, says 让AI帮我接入AI付, mentions jdpay-aipay, AI付快速接入, 一站式接入, 沙箱联调, 生产配置替换, 上线验证, 产品开通, 证书密钥, createOrder/queryPayResult/refund/queryRefundResult, iOS/Android SDK集成, JDPay.xcframework, AAR, registeredService/sign/pay, 标品支付/眼镜支付, or asks merchant-facing AI付 onboarding questions. It guides and executes both server-side integration (Java, Node.js, Python) and client-side SDK integration (iOS, Android); answers with external merchant-friendly language using the bundled QA/API references."
+description: "京东 AI付一站式接入 Agent。Use this skill whenever the user wants to 接入/集成/联调/上线 京东AI付, says 让AI帮我接入AI付, mentions jdpay-aipay, AI付快速接入, 一站式接入, 沙箱联调, 生产配置替换, 上线验证, 产品开通, 证书密钥, 证书转base64, pfx转base64, createOrder/queryPayResult/refund/queryRefundResult, iOS/Android SDK集成, JDPay.xcframework, AAR, registeredService/sign/pay, 标品支付/眼镜支付, or asks merchant-facing AI付 onboarding questions. It guides and executes both server-side integration (Java, Node.js, Python) and client-side SDK integration (iOS, Android); answers with external merchant-friendly language using the bundled QA/API references."
 ---
 
 # 京东 AI付一站式接入 Agent（服务端 + 客户端）
@@ -46,6 +46,7 @@ description: "京东 AI付一站式接入 Agent。Use this skill whenever the us
 - 代码集成完成后的产品开通并行提醒
 - 实名认证、产品开通、证书密钥获取、上线验证的平台侧操作指引
 - 接入过程中的产品、流程、接口、签名、加密、状态码、错误码答疑
+- 商户证书转 Base64：用户从企业站下载的证书（`.pfx` 私钥证书 / `.pem`/`.cer` 京东公钥证书）转成 aipay.env 可用的 Base64 值，脚本 `scripts/cert_to_base64.sh`，详见 `playbooks/08-certificate-secret-guide.md`
 
 ## 默认流程
 
