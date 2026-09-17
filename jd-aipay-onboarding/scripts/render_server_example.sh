@@ -267,7 +267,7 @@ elif language == 'python':
     py_src = os.path.join(examples_dir, 'python-quickstart')
     shutil.copytree(py_src, target)
     demo_dir = os.path.join(target, 'src', 'aipay_demo')
-    keep = {f"{main_entry}.py", '__init__.py', 'utils'}
+    keep = {f"{main_entry}.py", '__init__.py', 'config.py', 'utils'}
     for name in os.listdir(demo_dir):
         if name in keep:
             continue
@@ -283,7 +283,7 @@ else:
     node_src = os.path.join(examples_dir, 'nodejs-quickstart')
     shutil.copytree(node_src, target)
     demo_dir = os.path.join(target, 'src')
-    keep = {f"{main_entry}.js", 'utils'}
+    keep = {f"{main_entry}.js", 'config.js', 'utils'}
     for name in os.listdir(demo_dir):
         if name in keep:
             continue

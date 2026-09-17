@@ -9,6 +9,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 
+from aipay_demo import config
 from aipay_demo.utils.common import (
     build_content,
     build_http_headers,
@@ -20,19 +21,8 @@ from aipay_demo.utils.common import (
     try_decrypt_response_biz_content,
 )
 
-ENV = "__ENV__"                       # pre | prod | sandbox
-SM2_JD_PUB = "__SM2_JD_PUB__"         # 京东 SM2 公钥证书 Base64 —— 内置共享公钥（assets/certs/jd-sm2-pub.b64），由 render_server_example.sh 自动注入，无需商户提供
 
-SECRET_KEY = "__SECRET_KEY__"
-PFX_BASE64 = "__PFX_BASE64__"
-PFX_PASSWORD = "__PFX_PASSWORD__"
 
-ENDPOINT_URL = "__ENDPOINT_URL__"
-APP_ID = "__APP_ID__"
-AGENT_ID = "__AGENT_ID__"
-MERCHANT_NO = "__MERCHANT_NO__"
-ACQ_MERCHANT_NO = "__ACQ_MERCHANT_NO__"
-ACCESS_TYPE = "__ACCESS_TYPE__"       # 接入类型：SERVICE_MER 服务商 / COMMON 普通商户
 
 # 业务参数
 OUT_TRADE_NO = "__OUT_TRADE_NO__"
@@ -40,30 +30,30 @@ OUT_TRADE_NO = "__OUT_TRADE_NO__"
 
 def build_biz_json() -> str:
     biz = OrderedDict([
-        ("acqMerchantNo", ACQ_MERCHANT_NO),  # 收单商户号
-        ("accessType", ACCESS_TYPE),         # 接入类型：SERVICE_MER 服务商 / COMMON 普通商户
+        ("acqMerchantNo", config.ACQ_MERCHANT_NO),  # 收单商户号
+        ("accessType", config.ACCESS_TYPE),         # 接入类型：SERVICE_MER 服务商 / COMMON 普通商户
         ("outTradeNo", OUT_TRADE_NO),        # 商户外部订单号
     ])
     return json.dumps(biz, ensure_ascii=False, separators=(",", ":"))
 
 
 def main() -> None:
-    pfx = parse_pfx_base64(PFX_BASE64, PFX_PASSWORD)
+    pfx = parse_pfx_base64(config.PFX_BASE64, config.PFX_PASSWORD)
     biz_json = build_biz_json()
-    biz_content = encode_biz_content(biz_json, pfx, SM2_JD_PUB)
+    biz_content = encode_biz_content(biz_json, pfx, config.SM2_JD_PUB)
 
     content = build_content(
         biz_content_encrypted=biz_content,
-        app_id=APP_ID,
-        agent_id=AGENT_ID,
-        merchant_no=MERCHANT_NO,
+        app_id=config.APP_ID,
+        agent_id=config.AGENT_ID,
+        merchant_no=config.MERCHANT_NO,
     )
     sign_string = build_sign_string(content)
-    sign = hmac_sm3_hex(sign_string, SECRET_KEY)
+    sign = hmac_sm3_hex(sign_string, config.SECRET_KEY)
     content["sign"] = sign
 
     body = json.dumps({"data": {"content": content}}, ensure_ascii=False, separators=(",", ":"))
-    headers = build_http_headers(APP_ID)
+    headers = build_http_headers(config.APP_ID)
 
     print("=================== bizContent 明文 ===================")
     print(biz_json)
@@ -77,7 +67,7 @@ def main() -> None:
     print("=================== HTTP Body ===================")
     print(body)
 
-    resp = post_json(ENDPOINT_URL, headers, body)
+    resp = post_json(config.ENDPOINT_URL, headers, body)
     print("=================== HTTP Response ===================")
     print(resp)
 

@@ -1,6 +1,7 @@
 package com.jdd.demo;
 
 import com.alibaba.fastjson.JSONObject;
+import com.jdd.demo.common.AiPayConfig;
 import com.jdd.demo.common.Constants;
 import com.jdd.demo.utils.EncryptUtils;
 
@@ -39,23 +40,11 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class RokidCreateOrderGatewayDemo {
 
-    /** 环境标识：pre / prod / sandbox，由 render 脚本替换 */
-    private static final String ENV = "__ENV__";
 
-    /** 京东 SM2 公钥证书 Base64 —— 内置共享公钥（assets/certs/jd-sm2-pub.b64），由 render_server_example.sh 自动注入，无需商户提供 */
-    private static final String SM2_JD_PUB = "__SM2_JD_PUB__";
 
-    /** 签名密钥（HMAC-SM3）—— 敏感参数，由用户提供 */
-    private static final String SECRET_KEY = "__SECRET_KEY__";
 
-    /** 商户私钥 pfx 文件的 Base64 编码 —— 敏感参数，由用户提供 */
-    private static final String PFX_BASE64 = "__PFX_BASE64__";
 
-    /** 商户私钥 pfx 密码 —— 敏感参数，由用户提供 */
-    private static final String PFX_PASSWORD = "__PFX_PASSWORD__";
 
-    /** 接口全路径 URL（含环境域名）—— skill 生成时替换 */
-    private static final String ENDPOINT_URL = "__ENDPOINT_URL__";
 
     public static void main(String[] args) throws Exception {
         String bizJson = buildBizJson();
@@ -65,7 +54,7 @@ public class RokidCreateOrderGatewayDemo {
         content.put("bizContent", bizContent);
 
         String signString = buildSignString(content);
-        String sign = computeSign(signString, SECRET_KEY);
+        String sign = computeSign(signString, AiPayConfig.SECRET_KEY);
         content.put("sign", sign);
 
         JSONObject data = new JSONObject(true);
@@ -88,7 +77,7 @@ public class RokidCreateOrderGatewayDemo {
         System.out.println("=================== HTTP Body ===================");
         System.out.println(body.toJSONString());
 
-        String responseText = postJson(ENDPOINT_URL, httpHeader, body.toJSONString());
+        String responseText = postJson(AiPayConfig.ENDPOINT_URL, httpHeader, body.toJSONString());
         System.out.println("=================== HTTP Response ===================");
         System.out.println(responseText);
 
@@ -120,9 +109,9 @@ public class RokidCreateOrderGatewayDemo {
         // 下单时间：yyyyMMddHHmmss
         biz.put("createDate", createDate);
         // 收单商户号 —— 由用户提供
-        biz.put("acqMerchantNo", "__ACQ_MERCHANT_NO__");
+        biz.put("acqMerchantNo", AiPayConfig.ACQ_MERCHANT_NO);
         // 接入类型：SERVICE_MER 服务商 / COMMON 普通商户 —— 由用户选择
-        biz.put("accessType", "__ACCESS_TYPE__");
+        biz.put("accessType", AiPayConfig.ACCESS_TYPE);
         // 商户外部订单号 —— 由用户提供
         biz.put("outTradeNo", "__OUT_TRADE_NO__");
         // 交易类型
@@ -143,14 +132,14 @@ public class RokidCreateOrderGatewayDemo {
     }
 
     private static String encodeBizContent(String bizJson) throws Exception {
-        return EncryptUtils.encryptForSm2WithBase64(bizJson, PFX_BASE64, PFX_PASSWORD, SM2_JD_PUB);
+        return EncryptUtils.encryptForSm2WithBase64(bizJson, AiPayConfig.PFX_BASE64, AiPayConfig.PFX_PASSWORD, AiPayConfig.SM2_JD_PUB);
     }
 
     private static Map<String, String> buildContent() {
         Map<String, String> map = new TreeMap<>();
-        map.put("appId", "__APP_ID__");
-        map.put("merchantNo", "__MERCHANT_NO__");
-        map.put("agentId", "__AGENT_ID__");
+        map.put("appId", AiPayConfig.APP_ID);
+        map.put("merchantNo", AiPayConfig.MERCHANT_NO);
+        map.put("agentId", AiPayConfig.AGENT_ID);
         map.put("reqNo", UUID.randomUUID().toString().replace("-", "").toUpperCase());
         map.put("timestamp", String.valueOf(System.currentTimeMillis()));
         map.put("nonce", randomHex(16));
@@ -294,7 +283,7 @@ public class RokidCreateOrderGatewayDemo {
             System.out.println(encType);
             System.out.println("=================== 响应 bizContent 明文 ===================");
             if ("SM2".equalsIgnoreCase(encType)) {
-                String plain = EncryptUtils.decryptForSm2WithBase64(bizContent, PFX_BASE64, PFX_PASSWORD);
+                String plain = EncryptUtils.decryptForSm2WithBase64(bizContent, AiPayConfig.PFX_BASE64, AiPayConfig.PFX_PASSWORD);
                 System.out.println(plain);
             } else {
                 byte[] plain = Base64.getDecoder().decode(bizContent);
