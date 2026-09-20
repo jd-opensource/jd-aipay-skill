@@ -9,12 +9,13 @@
 #   language          语言: java（默认） | python | nodejs
 #   interface         接口: createOrder | queryPayResult | refund | queryRefundResult
 #   env               环境: pre | prod | sandbox
-#   base_url          环境域名（不含 /api 与尾斜杠）, 如 https://ridepassfront-pre.jd.com
-#   secret_key        HMAC-SM3 密钥
-#   pfx_base64        商户 pfx 文件 base64（与 pfx_path 二选一）
+#   base_url          环境域名（不含 /api 与尾斜杠）, 如 https://ridepassfront-pre.jd.com；env=sandbox 时可省略（内置 https://fpitest.jd.com）
+#   sandbox_id        沙箱实例 ID —— 仅 env=sandbox 时必填，商户在平台创建沙箱后获得，脚本将其追加在接口路径后
+#   secret_key        HMAC-SM3 密钥（env=sandbox 时可省略，固定为 "test"）
+#   pfx_base64        商户 pfx 文件 base64（与 pfx_path 二选一；env=sandbox 时可省略，缺省用内置沙箱测试私钥）
 #   pfx_path          商户 pfx 文件路径（与 pfx_base64 二选一，脚本自动 base64）
-#   pfx_password      pfx 密码
-#   sm2_jd_pub        京东 SM2 公钥证书 Base64（可选；缺省使用 skill 内置共享公钥 assets/certs/jd-sm2-pub.b64，pre/prod 通用，用户提供时覆盖默认）
+#   pfx_password      pfx 密码（env=sandbox 时可省略，缺省为内置沙箱测试私钥密码）
+#   sm2_jd_pub        京东 SM2 公钥证书 Base64（可选；缺省按环境自动选择——sandbox 用 assets/certs/jd-sm2-pub-sandbox.b64，pre/prod 用 assets/certs/jd-sm2-pub.b64，用户提供时覆盖默认）
 #   agent_id
 #   app_id
 #   merchant_no
@@ -36,7 +37,7 @@ SKILL_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 EXAMPLES_DIR="$SKILL_DIR/assets/server-examples"
 
 usage() {
-  sed -n '3,30p' "$0"
+  sed -n '3,32p' "$0"
 }
 
 while [[ $# -gt 0 ]]; do
@@ -93,12 +94,44 @@ if language not in ('java', 'python', 'nodejs'):
 
 iface = need('interface')
 env = need('env').lower()
-base_url = need('base_url').rstrip('/')
+
+# 沙箱环境使用内置域名；pre/prod 必须提供 base_url
+if env == 'sandbox':
+    base_url = (kv.get('base_url', '').strip() or 'https://fpitest.jd.com').rstrip('/')
+else:
+    base_url = need('base_url').rstrip('/')
 
 # accessType：接入类型，SERVICE_MER 服务商 / COMMON 普通商户，由用户选择
 access_type = need('access_type').strip().upper()
 if access_type not in ('SERVICE_MER', 'COMMON'):
     print(f"[ERR] access_type 非法: {access_type}, 应为 SERVICE_MER|COMMON", file=sys.stderr); sys.exit(2)
+
+# 沙箱环境密钥与商户测试证书全部内置：secret_key 固定 "test"，私钥/密码用内置沙箱物料，商户无需提供
+secret_key = kv.get('secret_key', '').strip()
+pfx_b64 = kv.get('pfx_base64', '').strip()
+pfx_path = kv.get('pfx_path', '').strip()
+pfx_password = kv.get('pfx_password', '').strip()
+app_id = kv.get('app_id', '').strip()
+agent_id = kv.get('agent_id', '').strip()
+merchant_no = kv.get('merchant_no', '').strip()
+acq_merchant_no = kv.get('acq_merchant_no', '').strip()
+if env == 'sandbox':
+    if not secret_key:
+        secret_key = 'test'
+    if not pfx_b64 and not pfx_path:
+        sandbox_pfx = os.path.join(skill_dir, 'assets', 'certs', 'jd-merchant-pfx-sandbox.b64')
+        if not os.path.isfile(sandbox_pfx):
+            print(f"[ERR] 沙箱内置商户测试私钥缺失: {sandbox_pfx}", file=sys.stderr); sys.exit(2)
+        with open(sandbox_pfx, 'r', encoding='ascii') as f:
+            pfx_b64 = ''.join(f.read().split())
+    if not pfx_password:
+        pfx_password = 'gnvy4aQDs15VIU8H'
+else:
+    # pre/prod 无内置物料，密钥与证书仍为必填
+    if not secret_key:
+        print("[ERR] 配置缺少必填字段: secret_key", file=sys.stderr); sys.exit(2)
+    if not pfx_password:
+        print("[ERR] 配置缺少必填字段: pfx_password", file=sys.stderr); sys.exit(2)
 
 # 接口映射：不同语言使用不同的主入口文件名 / 模块
 JAVA_IFACE_MAP = {
@@ -131,12 +164,15 @@ if env not in ('pre', 'prod', 'sandbox'):
     print(f"[ERR] env 非法: {env}, 应为 pre|prod|sandbox", file=sys.stderr); sys.exit(2)
 
 main_entry, path_suffix = iface_map[iface]
-# base_url 是环境域名（不含 /api），/api 由脚本统一拼接到 endpoint
-endpoint_url = f"{base_url}/api/{path_suffix}"
+# base_url 是环境域名（不含 /api），/api 由脚本统一拼接到 endpoint；
+# 沙箱环境将商户自填的沙箱实例 ID 追加在接口路径后
+if env == 'sandbox':
+    sandbox_id = need('sandbox_id')
+    endpoint_url = f"{base_url}/api/{path_suffix}/{sandbox_id}"
+else:
+    endpoint_url = f"{base_url}/api/{path_suffix}"
 
-# pfx 来源：优先 pfx_base64；否则 pfx_path
-pfx_b64 = kv.get('pfx_base64', '').strip()
-pfx_path = kv.get('pfx_path', '').strip()
+# pfx 来源：优先 pfx_base64；否则 pfx_path（沙箱环境缺省时已在上方注入内置测试私钥）
 if not pfx_b64:
     if not pfx_path:
         print("[ERR] 必须提供 pfx_base64 或 pfx_path 之一", file=sys.stderr); sys.exit(2)
@@ -145,20 +181,21 @@ if not pfx_b64:
     with open(pfx_path, 'rb') as f:
         pfx_b64 = base64.b64encode(f.read()).decode('ascii')
 
-# sm2_jd_pub 可选：缺省使用 skill 内置共享京东公钥证书（pre/prod 通用）
+# sm2_jd_pub 可选：缺省按环境取内置公钥——沙箱用沙箱公钥，pre/prod 用共享公钥
 sm2_jd_pub = kv.get('sm2_jd_pub', '').strip()
 if not sm2_jd_pub:
-    cert_path = os.path.join(skill_dir, 'assets', 'certs', 'jd-sm2-pub.b64')
+    cert_name = 'jd-sm2-pub-sandbox.b64' if env == 'sandbox' else 'jd-sm2-pub.b64'
+    cert_path = os.path.join(skill_dir, 'assets', 'certs', cert_name)
     if not os.path.isfile(cert_path):
-        print(f"[ERR] 未提供 sm2_jd_pub，且内置共享公钥缺失: {cert_path}", file=sys.stderr); sys.exit(2)
+        print(f"[ERR] 未提供 sm2_jd_pub，且内置公钥缺失: {cert_path}", file=sys.stderr); sys.exit(2)
     with open(cert_path, 'r', encoding='ascii') as f:
         sm2_jd_pub = ''.join(f.read().split())
 
 placeholders = {
     '__ENV__':             env,
-    '__SECRET_KEY__':      need('secret_key'),
+    '__SECRET_KEY__':      secret_key,
     '__PFX_BASE64__':      pfx_b64,
-    '__PFX_PASSWORD__':    need('pfx_password'),
+    '__PFX_PASSWORD__':    pfx_password,
     '__SM2_JD_PUB__':      sm2_jd_pub,
     '__ENDPOINT_URL__':    endpoint_url,
     '__APP_ID__':          need('app_id'),
@@ -234,7 +271,7 @@ elif language == 'python':
     py_src = os.path.join(examples_dir, 'python-quickstart')
     shutil.copytree(py_src, target)
     demo_dir = os.path.join(target, 'src', 'aipay_demo')
-    keep = {f"{main_entry}.py", '__init__.py', 'utils'}
+    keep = {f"{main_entry}.py", '__init__.py', 'config.py', 'utils'}
     for name in os.listdir(demo_dir):
         if name in keep:
             continue
@@ -250,7 +287,7 @@ else:
     node_src = os.path.join(examples_dir, 'nodejs-quickstart')
     shutil.copytree(node_src, target)
     demo_dir = os.path.join(target, 'src')
-    keep = {f"{main_entry}.js", 'utils'}
+    keep = {f"{main_entry}.js", 'config.js', 'utils'}
     for name in os.listdir(demo_dir):
         if name in keep:
             continue
@@ -267,10 +304,52 @@ if leftover:
         print(f"  {m}  @ {p}", file=sys.stderr)
     sys.exit(3)
 
+# 生成工程根目录的 aipay.env：全部可替换配置项的唯一入口（支付宝式交互）
+if env == 'sandbox':
+    env_label = '沙箱环境'
+    endpoint_note = '# 接口完整地址。【替换】末尾的沙箱实例 ID 为你自己的'
+else:
+    env_label = '预发环境' if env == 'pre' else '生产环境'
+    endpoint_note = '# 接口完整地址'
+env_text = f"""# =====================================================
+# 京东 AI 付接入配置（{env_label}）
+# 本文件是本工程唯一需要编辑的配置：切换环境、更换密钥/证书/商户信息，改这里即可。
+# 标注【替换】的值请改成你自己的；其余为当前环境已生效的值。
+# =====================================================
+
+# 环境：pre（预发）/ prod（生产）/ sandbox（沙箱）
+AIPAY_ENV={env}
+
+{endpoint_note}
+AIPAY_ENDPOINT_URL={endpoint_url}
+
+# 应用与渠道标识 【替换：平台「应用信息」页分配的值】
+AIPAY_APP_ID={app_id}
+AIPAY_AGENT_ID={agent_id}
+
+# 商户号与接入类型 【替换：平台分配的商户号；COMMON 普通商户 / SERVICE_MER 服务商】
+AIPAY_MERCHANT_NO={merchant_no}
+AIPAY_ACQ_MERCHANT_NO={acq_merchant_no}
+AIPAY_ACCESS_TYPE={access_type}
+
+# HMAC-SM3 签名密钥 【替换：平台「密钥配置」页获取（沙箱固定为 test）】
+AIPAY_SECRET_KEY={secret_key}
+
+# 京东 SM2 公钥证书 Base64（信封加密用；已按当前环境内置，无需替换）
+AIPAY_PUBLIC_KEY={sm2_jd_pub}
+
+# 商户私钥证书（PFX）Base64 与密码 【替换：你自己的商户证书；沙箱环境已内置公共测试私钥，无需替换】
+AIPAY_MERCHANT_PFX={pfx_b64}
+AIPAY_MERCHANT_PFX_PASSWORD={pfx_password}
+"""
+with open(os.path.join(target, 'aipay.env'), 'w', encoding='utf-8') as f:
+    f.write(env_text)
+
 print(f"[OK] 已生成 {language} 工程: {target}")
 print(f"     接口: {iface}")
 print(f"     环境: {env}")
 print(f"     Endpoint: {endpoint_url}")
+print(f"     配置文件: {os.path.join(target, 'aipay.env')}（全部可替换值集中在此，改完即生效）")
 if language == 'java':
     print(f"     mainClass: com.jdd.demo.{main_entry}")
     print(f"     运行: cd {target} && mvn -q compile exec:java")

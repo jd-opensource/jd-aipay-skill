@@ -39,23 +39,15 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 public class RokidRefundGatewayDemo {
 
-    /** 环境标识：pre / prod / sandbox，由 render 脚本替换 */
-    private static final String ENV = "__ENV__";
-    /** 京东 SM2 公钥证书 Base64 —— 内置共享公钥（assets/certs/jd-sm2-pub.b64），由 render_server_example.sh 自动注入，无需商户提供 */
-    private static final String SM2_JD_PUB = "__SM2_JD_PUB__";
-    private static final String SECRET_KEY = "__SECRET_KEY__";
-    private static final String PFX_BASE64 = "__PFX_BASE64__";
-    private static final String PFX_PASSWORD = "__PFX_PASSWORD__";
-    private static final String ENDPOINT_URL = "__ENDPOINT_URL__";
 
     public static void main(String[] args) throws Exception {
         String bizJson = buildBizJson();
-        String bizContent = EncryptUtils.encryptForSm2WithBase64(bizJson, PFX_BASE64, PFX_PASSWORD, SM2_JD_PUB);
+        String bizContent = EncryptUtils.encryptForSm2WithBase64(bizJson, AiPayConfig.PFX_BASE64, AiPayConfig.PFX_PASSWORD, AiPayConfig.SM2_JD_PUB);
 
         Map<String, String> content = buildContent();
         content.put("bizContent", bizContent);
         String signString = buildSignString(content);
-        String sign = computeSign(signString, SECRET_KEY);
+        String sign = computeSign(signString, AiPayConfig.SECRET_KEY);
         content.put("sign", sign);
 
         JSONObject data = new JSONObject(true);
@@ -78,7 +70,7 @@ public class RokidRefundGatewayDemo {
         System.out.println("=================== HTTP Body ===================");
         System.out.println(body.toJSONString());
 
-        String responseText = postJson(ENDPOINT_URL, httpHeader, body.toJSONString());
+        String responseText = postJson(AiPayConfig.ENDPOINT_URL, httpHeader, body.toJSONString());
         System.out.println("=================== HTTP Response ===================");
         System.out.println(responseText);
 
@@ -93,9 +85,9 @@ public class RokidRefundGatewayDemo {
 
         JSONObject biz = new JSONObject(true);
         // 收单商户号 —— 由用户提供
-        biz.put("acqMerchantNo", "__ACQ_MERCHANT_NO__");
+        biz.put("acqMerchantNo", AiPayConfig.ACQ_MERCHANT_NO);
         // 接入类型：SERVICE_MER 服务商 / COMMON 普通商户 —— 由用户选择
-        biz.put("accessType", "__ACCESS_TYPE__");
+        biz.put("accessType", AiPayConfig.ACCESS_TYPE);
         // 原下单商户订单号 —— 由用户提供
         biz.put("originalOutTradeNo", "__ORIGINAL_OUT_TRADE_NO__");
         // 退款单号（自动生成，幂等键）
@@ -111,9 +103,9 @@ public class RokidRefundGatewayDemo {
 
     private static Map<String, String> buildContent() {
         Map<String, String> map = new TreeMap<>();
-        map.put("appId", "__APP_ID__");
-        map.put("merchantNo", "__MERCHANT_NO__");
-        map.put("agentId", "__AGENT_ID__");
+        map.put("appId", AiPayConfig.APP_ID);
+        map.put("merchantNo", AiPayConfig.MERCHANT_NO);
+        map.put("agentId", AiPayConfig.AGENT_ID);
         map.put("reqNo", UUID.randomUUID().toString().replace("-", "").toUpperCase());
         map.put("timestamp", String.valueOf(System.currentTimeMillis()));
         map.put("nonce", randomHex(16));
@@ -244,7 +236,7 @@ public class RokidRefundGatewayDemo {
             System.out.println(encType);
             System.out.println("=================== 响应 bizContent 明文 ===================");
             if ("SM2".equalsIgnoreCase(encType)) {
-                System.out.println(EncryptUtils.decryptForSm2WithBase64(bizContent, PFX_BASE64, PFX_PASSWORD));
+                System.out.println(EncryptUtils.decryptForSm2WithBase64(bizContent, AiPayConfig.PFX_BASE64, AiPayConfig.PFX_PASSWORD));
             } else {
                 System.out.println(new String(Base64.getDecoder().decode(bizContent), StandardCharsets.UTF_8));
             }
