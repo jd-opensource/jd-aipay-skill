@@ -8,12 +8,13 @@
 
 | 项 | 值 |
 | --- | --- |
-| 网关域名 | `https://fpitest.jd.com` |
-| 接口路径 | `{域名}/api/pay-ai-agent/<接口名>/{沙箱实例ID}` |
-| 沙箱实例 ID | 商户在平台创建沙箱后获得（如 `2099854417468633089`），**由用户自行填写**，追加在接口路径后 |
-| 京东 SM2 公钥 | 沙箱独立公钥，内置在 `assets/certs/jd-sm2-pub-sandbox.b64`（选 `env=sandbox` 时自动注入，与 pre/prod 共享证书**不同**，无需额外配置） |
+| 网关地址 | `https://fpitest.jd.com`（公网沙箱网关，与内置沙箱证书配套）；若沙箱提供方另行给定联调地址，以提供方为准，渲染后改 aipay.env 的 `AIPAY_ENDPOINT_URL` 即可 |
+| 接口路径 | `{网关地址}/api/pay-ai-agent/<接口名>/{沙箱实例ID}`，渲染脚本按此默认拼接，商户只需提供沙箱实例 ID |
+| 沙箱实例 ID | 商户在平台创建沙箱后获得（如 `2095134941531615233`），**由用户自行填写**，追加在接口路径后 |
+| 京东 SM2 公钥 | 沙箱独立公钥（**test 版**），内置在 `assets/certs/jd-sm2-pub-sandbox.b64`（选 `env=sandbox` 时自动注入，与 pre/prod 共享证书**不同**，无需额外配置） |
 | SM3 密钥（secret_key） | 沙箱统一为 **`test`**（内置缺省，无需用户提供） |
 | 商户测试私钥 | 内置 `assets/certs/jd-merchant-pfx-sandbox.b64`（CN=金脉智测(AKS00001AKS)）+ 内置密码，商户**无需准备任何证书** |
+| 数字字段 | `tradeAmount` / `refundAmount` / `timestamp` 必须为 **JSON 数字类型**（不能加引号），三语言模板已统一数字化 |
 
 > 沙箱环境下商户只需提供**沙箱实例 ID** 与业务参数，其余密钥/证书全部内置。
 
