@@ -41,7 +41,7 @@ function genReqNo() {
 }
 
 function nowMs() {
-  return String(Date.now());
+  return Date.now();
 }
 
 /**

@@ -53,7 +53,7 @@ def build_biz_json() -> str:
         ("tradeSubject", "AI付测试订单"),           # 交易主题
         ("clientType", "APP"),                       # 客户端类型
         ("deviceInfo", json.dumps(device, ensure_ascii=False, separators=(",", ":"))),
-        ("tradeAmount", TRADE_AMOUNT),               # 交易金额（分）
+        ("tradeAmount", int(TRADE_AMOUNT)),               # 交易金额（分）
         ("createDate", datetime.now().strftime("%Y%m%d%H%M%S")),
         ("acqMerchantNo", config.ACQ_MERCHANT_NO),          # 收单商户号
         ("accessType", config.ACCESS_TYPE),                 # 接入类型：SERVICE_MER 服务商 / COMMON 普通商户

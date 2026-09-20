@@ -39,8 +39,8 @@ def gen_req_no() -> str:
     return uuid.uuid4().hex.upper()
 
 
-def now_ms() -> str:
-    return str(int(time.time() * 1000))
+def now_ms() -> int:
+    return int(time.time() * 1000)
 
 
 def _hmac_sm3(secret_key: bytes, data: bytes) -> str:
@@ -63,7 +63,7 @@ def hmac_sm3_hex(string_to_sign: str, secret_key: str) -> str:
     return _hmac_sm3(secret_key.encode("utf-8"), string_to_sign.encode("utf-8"))
 
 
-def build_sign_string(content: Dict[str, str]) -> str:
+def build_sign_string(content: Dict[str, Any]) -> str:
     """按 ASCII 升序把 content 层字段拼成 k1=v1&k2=v2；空值不参与；signType 不参与。"""
 
     parts = []
