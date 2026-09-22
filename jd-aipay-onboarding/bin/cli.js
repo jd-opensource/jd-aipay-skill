@@ -117,7 +117,7 @@ function countFiles(dir) {
 // ── Cursor .mdc 规则文件生成 ─────────────────────────
 function generateCursorRule(skillDir) {
   return `---
-description: "京东 AI付一站式接入 Agent。当用户提到 接入AI付、集成AI付、联调、上线AI付、jdpay-aipay、AI付快速接入、一站式接入、沙箱联调、生产配置替换、上线验证、产品开通、证书密钥、createOrder、queryPayResult、refund、queryRefundResult，或咨询 AI付/订阅 接入问题时触发。"
+description: "京东 AI付一站式接入 Agent。当用户提到 接入AI付、集成AI付、联调、上线AI付、jdpay-aipay、AI付快速接入、一站式接入、沙箱联调、生产配置替换、上线验证、产品开通、实名认证、证书密钥、主动下一步引导、createOrder、queryPayResult、refund、queryRefundResult，或咨询 AI付/订阅 接入问题时触发。"
 alwaysApply: false
 ---
 
@@ -125,7 +125,7 @@ alwaysApply: false
 
 ## 定位
 
-让接入这件事交给 AI 来做。你要引导并执行京东 AI付服务端代码集成、沙箱联调、生产配置替换与上线验证，同时提供产品开通、实名认证、证书密钥获取等平台侧操作指引。
+让接入这件事交给 AI 来做。你要引导并执行京东 AI付服务端代码集成、沙箱联调、生产配置替换与上线验证，同时提供产品开通、实名认证、证书密钥获取等平台侧操作指引。每完成一项任务后，都要主动告诉商户下一步做什么、去哪里做、做完后回来继续什么。
 
 ## Skill 资料目录
 
@@ -153,9 +153,9 @@ alwaysApply: false
 1. 先阅读 \`${skillDir}/playbooks/00-response-style.md\`，保持对外商户友好的接入顾问口径。
 2. 检测当前工作区是否为服务端项目，并识别 Java / Node.js / Python 语言与框架。
 3. 如果识别到服务端项目，阅读 \`${skillDir}/playbooks/02-detect-server-project.md\` 和对应语言 playbook，在现有项目内完成代码集成。
-4. 代码集成完成后，阅读 \`${skillDir}/playbooks/06-product-opening-parallel-reminder.md\`，提醒产品开通。
-5. 执行沙箱联调（\`${skillDir}/playbooks/07-sandbox-joint-debug.md\`）。
-6. 引导证书密钥准备（\`${skillDir}/playbooks/08-certificate-secret-guide.md\`）。
+4. 代码集成完成后，阅读 \`${skillDir}/playbooks/06-product-opening-parallel-reminder.md\` 和 \`${skillDir}/playbooks/15-platform-next-step-router.md\`，主动提醒产品开通/实名认证并行推进。
+5. 执行沙箱联调（\`${skillDir}/playbooks/07-sandbox-joint-debug.md\`），完成后继续按下一步路由主动引导。
+6. 引导实名认证（\`${skillDir}/playbooks/13-real-name-auth-guide.md\`）、产品开通（\`${skillDir}/playbooks/14-product-opening-guide.md\`）和证书密钥准备（\`${skillDir}/playbooks/08-certificate-secret-guide.md\`）。
 7. 生产配置替换（\`${skillDir}/playbooks/09-production-cutover.md\`）。
 8. 上线验证（\`${skillDir}/playbooks/10-go-live-verification.md\`）。
 
@@ -175,7 +175,12 @@ alwaysApply: false
 
 - AI付官网：https://aipay.jdpay.com/
 - 快速接入页：https://aipay.jdpay.com/developers
-- 一站式接入：https://aipay.jdpay.com/onboarding?product=AI_PAY
+- 一站式接入：https://aipay.jdpay.com/process?productId=ai_pay
+- 产品开通：https://aipay.jdpay.com/process?productId=ai_pay&activeProcessStep=PRODUCT_OPEN
+- 去实名认证：https://qy-web.jdpay.com/select?source=QYZ&channel=00006&scene=SMRZ&bussCode=REAL_NAME&merchantno={merchantno}&r={callback}
+  - merchantno 为商户号，callback 为认证完成后的回跳地址；参数不明确时，从产品开通页点击「去实名」。
+- 证书密钥：https://aipay.jdpay.com/process?productId=ai_pay&activeProcessStep=CERT_KEY
+- 线上验证：https://aipay.jdpay.com/process?productId=ai_pay&activeProcessStep=ONLINE_VERIFY
 - 技术支持：jdpay-bd@jd.com / 400-098-8500
 `;
 }

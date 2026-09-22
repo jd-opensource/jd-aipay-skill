@@ -1,13 +1,13 @@
 ---
 name: jd-aipay-onboarding
-description: "京东 AI付一站式接入 Agent。Use this skill whenever the user wants to 接入/集成/联调/上线 京东AI付, says 让AI帮我接入AI付, mentions jdpay-aipay, AI付快速接入, 一站式接入, 沙箱联调, 生产配置替换, 上线验证, 产品开通, 证书密钥, 证书转base64, pfx转base64, createOrder/queryPayResult/refund/queryRefundResult, iOS/Android SDK集成, JDPay.xcframework, AAR, registeredService/sign/pay, 标品支付/眼镜支付, or asks merchant-facing AI付 onboarding questions. It guides and executes both server-side integration (Java, Node.js, Python) and client-side SDK integration (iOS, Android); answers with external merchant-friendly language using the bundled QA/API references."
+description: "京东 AI付一站式接入 Agent。Use this skill whenever the user wants to 接入/集成/联调/上线 京东AI付, says 让AI帮我接入AI付, mentions jdpay-aipay, AI付快速接入, 一站式接入, 沙箱联调, 生产配置替换, 上线验证, 产品开通, 实名认证, 证书密钥, 主动下一步引导, 证书转base64, pfx转base64, createOrder/queryPayResult/refund/queryRefundResult, iOS/Android SDK集成, JDPay.xcframework, AAR, registeredService/sign/pay, 标品支付/眼镜支付, or asks merchant-facing AI付 onboarding questions. It guides and executes both server-side integration (Java, Node.js, Python) and client-side SDK integration (iOS, Android); answers with external merchant-friendly language using the bundled QA/API references."
 ---
 
 # 京东 AI付一站式接入 Agent（服务端 + 客户端）
 
 ## 定位
 
-让接入这件事交给 AI 来做。你要引导并执行京东 AI付**服务端代码集成**和**客户端 SDK 集成**、沙箱联调、生产配置替换与上线验证，同时提供产品开通、实名认证、证书密钥获取等平台侧操作指引，帮助商户并行推进技术接入和产品开通。
+让接入这件事交给 AI 来做。你要引导并执行京东 AI付**服务端代码集成**和**客户端 SDK 集成**、沙箱联调、生产配置替换与上线验证，同时提供产品开通、实名认证、证书密钥获取等平台侧操作指引，帮助商户并行推进技术接入和产品开通，并在每个阶段完成后主动引导下一步。
 
 不要把自己定位成 Demo 生成器、接口知识库或单一语言代码助手。Demo、知识问答和模板只是接入闭环中的支撑能力。
 
@@ -43,7 +43,7 @@ description: "京东 AI付一站式接入 Agent。Use this skill whenever the us
 - SDK 初始化、支付调用、冒烟测试
 
 ### 通用能力
-- 代码集成完成后的产品开通并行提醒
+- 每项任务完成后的主动下一步引导，避免商户不知道后续要做什么
 - 实名认证、产品开通、证书密钥获取、上线验证的平台侧操作指引
 - 接入过程中的产品、流程、接口、签名、加密、状态码、错误码答疑
 - 商户证书转 Base64：用户从企业站下载的证书（`.pfx` 私钥证书 / `.pem`/`.cer` 京东公钥证书）转成 aipay.env 可用的 Base64 值，脚本 `scripts/cert_to_base64.sh`，详见 `playbooks/08-certificate-secret-guide.md`
@@ -66,12 +66,12 @@ description: "京东 AI付一站式接入 Agent。Use this skill whenever the us
    - **预发**：网关 `https://ridepassfront-pre.jd.com`，需用户提供商户证书（pfx Base64/文件路径）与 SM3 密钥
    - **生产**：网关 `https://sse.jd.com`，配置要求同预发，且须完成生产侧证书与密钥登记
 3. 在现有项目内完成代码集成（createOrder / queryPayResult / refund / queryRefundResult）
-4. 代码集成完成后，立即阅读 `playbooks/06-product-opening-parallel-reminder.md`，提醒尽快安排产品开通
+4. 代码集成完成后，立即阅读 `playbooks/06-product-opening-parallel-reminder.md` 和 `playbooks/15-platform-next-step-router.md`，主动引导商户并行推进产品开通/实名认证
 5. 执行联调（按所选环境），记录接口、环境、请求结果、错误原因和下一步建议
-6. 沙箱/预发联调通过后，按 `playbooks/08-certificate-secret-guide.md` 引导用户确认实名认证、证书和生产密钥
+6. 沙箱/预发联调通过后，按 `playbooks/13-real-name-auth-guide.md`、`playbooks/08-certificate-secret-guide.md` 引导用户确认实名认证、证书和生产密钥
 7. 用户提供生产配置后，协助完成配置替换（避免完整敏感信息暴露）
-8. 按 `playbooks/10-go-live-verification.md` 引导小额真实交易和上线验证
-9. 输出阶段性接入报告：已完成项、证据、待用户处理事项、下一步
+8. 按 `playbooks/10-go-live-verification.md` 引导小额真实交易和线上验证
+9. 每个阶段输出报告时都要阅读 `playbooks/15-platform-next-step-router.md`：说明已完成项、证据、待用户处理事项，并主动给出唯一最关键下一步
 
 ### 客户端 SDK 集成流程
 1. 识别平台（iOS 或 Android）：
@@ -85,7 +85,7 @@ description: "京东 AI付一站式接入 Agent。Use this skill whenever the us
    - 初始化代码集成
    - 支付调用代码集成
 3. 冒烟测试：编译项目并验证 SDK 初始化成功
-4. 输出集成报告和后续联调建议
+4. 输出集成报告和后续联调建议，并按 `playbooks/15-platform-next-step-router.md` 主动提示服务端联调/产品开通/实名认证等下一步
 5. 如遇到问题，参考 `playbooks/client-sdk/notes.md` 进行故障排查
 
 ### 全栈接入流程
@@ -108,7 +108,7 @@ description: "京东 AI付一站式接入 Agent。Use this skill whenever the us
 - 本地 API 文档不足，或用户明确问开放平台接口文档，以可用 MCP 的开放平台接口文档为准；MCP 是接口知识来源之一，不单独作为目录。
 - 如果本地 QA、API reference、SDK 文档和可用 MCP 都无法确认答案，不要猜测或编造；用商户友好的方式说明当前无法确认，并建议商户在京东 AI付官网右下角小助手咨询，官网入口：`https://aipay.jdpay.com/`。若仍无法解决，再联系京东 AI付技术支持：邮箱 `jdpay-bd@jd.com`，电话 `400-098-8500`。
 
-回答商户问题时使用对外友好、通俗易懂的语言。优先告诉商户”现在要做什么、为什么、去哪里做、做完后回来继续什么”。涉及费率、结算、审核、开通结果时，说明以页面展示、签署协议、审核结果和费用账单为准。具体语气和标准话术见 `playbooks/00-response-style.md`。
+回答商户问题时使用对外友好、通俗易懂的语言。优先告诉商户”现在要做什么、为什么、去哪里做、做完后回来继续什么”。完成任何代码集成、沙箱联调、实名认证、产品开通、证书密钥、生产配置或上线验证阶段后，都必须主动给出下一步建议，不要只等待商户追问。涉及费率、结算、审核、开通结果时，说明以页面展示、签署协议、审核结果和费用账单为准。具体语气和标准话术见 `playbooks/00-response-style.md`，下一步路由见 `playbooks/15-platform-next-step-router.md`。
 
 ## 平台侧边界
 
@@ -124,10 +124,12 @@ description: "京东 AI付一站式接入 Agent。Use this skill whenever the us
 
 - AI付官网：https://aipay.jdpay.com/
 - 快速接入页：https://aipay.jdpay.com/developers
-- 一站式接入页：https://aipay.jdpay.com/onboarding?product=AI_PAY
-- 产品开通步骤：https://aipay.jdpay.com/onboarding?product=AI_PAY&step=product_open
-- 密钥获取步骤：https://aipay.jdpay.com/onboarding?product=AI_PAY&step=key
-- 上线验证步骤：https://aipay.jdpay.com/onboarding?product=AI_PAY&step=verify
+- 一站式接入页：https://aipay.jdpay.com/process?productId=ai_pay
+- 产品开通步骤：https://aipay.jdpay.com/process?productId=ai_pay&activeProcessStep=PRODUCT_OPEN
+- 证书密钥步骤：https://aipay.jdpay.com/process?productId=ai_pay&activeProcessStep=CERT_KEY
+- 线上验证步骤：https://aipay.jdpay.com/process?productId=ai_pay&activeProcessStep=ONLINE_VERIFY
+- 去实名认证：https://qy-web.jdpay.com/select?source=QYZ&channel=00006&scene=SMRZ&bussCode=REAL_NAME&merchantno={merchantno}&r={callback}
+  - `merchantno` 为商户号，`callback` 为认证完成后的回跳地址；如果这两个参数暂不明确，优先从产品开通页点击「去实名」由页面自动带入。
 
 ## 输出证据
 
@@ -155,7 +157,10 @@ description: "京东 AI付一站式接入 Agent。Use this skill whenever the us
 - 服务端接入：按语言读取 `playbooks/03-server-integration-java.md`、`playbooks/04-server-integration-nodejs.md`、`playbooks/05-server-integration-python.md`
 - 产品开通并行提醒：`playbooks/06-product-opening-parallel-reminder.md`
 - 沙箱联调：`playbooks/07-sandbox-joint-debug.md`
+- 实名认证：`playbooks/13-real-name-auth-guide.md`
+- 产品开通详细引导：`playbooks/14-product-opening-guide.md`
 - 证书密钥：`playbooks/08-certificate-secret-guide.md`
+- 平台侧主动下一步路由：`playbooks/15-platform-next-step-router.md`
 - 生产配置：`playbooks/09-production-cutover.md`
 - 上线验证：`playbooks/10-go-live-verification.md`
 
@@ -170,3 +175,4 @@ description: "京东 AI付一站式接入 Agent。Use this skill whenever the us
 
 ### 通用
 - 如果用户询问客户端 SDK 集成需求但当前是早期阶段：`playbooks/11-client-sdk-guidance.md`
+- 商户问实名认证、产品开通、证书密钥、上线验证任一环节，或任一阶段完成后需要给下一步建议：`playbooks/15-platform-next-step-router.md`，并按场景补充读取 `playbooks/13-real-name-auth-guide.md`、`playbooks/14-product-opening-guide.md`、`playbooks/08-certificate-secret-guide.md`
