@@ -57,7 +57,7 @@ function buildBizJson() {
     tradeSubject: 'AI付测试订单', // 交易主题
     clientType: 'APP', // 客户端类型
     deviceInfo: JSON.stringify(device),
-    tradeAmount: TRADE_AMOUNT, // 交易金额（分）
+    tradeAmount: Number(TRADE_AMOUNT), // 交易金额（分）
     createDate: nowYyyyMmDdHhMmSs(),
     acqMerchantNo: config.ACQ_MERCHANT_NO, // 收单商户号
     accessType: config.ACCESS_TYPE, // 接入类型：SERVICE_MER 服务商 / COMMON 普通商户

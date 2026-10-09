@@ -41,7 +41,7 @@ public class RokidQueryRefundGatewayDemo {
         String bizJson = buildBizJson();
         String bizContent = EncryptUtils.encryptForSm2WithBase64(bizJson, AiPayConfig.PFX_BASE64, AiPayConfig.PFX_PASSWORD, AiPayConfig.SM2_JD_PUB);
 
-        Map<String, String> content = buildContent();
+        Map<String, Object> content = buildContent();
         content.put("bizContent", bizContent);
         String signString = buildSignString(content);
         String sign = computeSign(signString, AiPayConfig.SECRET_KEY);
@@ -52,7 +52,7 @@ public class RokidQueryRefundGatewayDemo {
         JSONObject body = new JSONObject(true);
         body.put("data", data);
 
-        Map<String, String> httpHeader = buildHttpHeader(content.get("appId"));
+        Map<String, String> httpHeader = buildHttpHeader(String.valueOf(content.get("appId")));
 
         System.out.println("=================== bizContent 明文 ===================");
         System.out.println(bizJson);
@@ -85,13 +85,13 @@ public class RokidQueryRefundGatewayDemo {
         return biz.toJSONString();
     }
 
-    private static Map<String, String> buildContent() {
-        Map<String, String> map = new TreeMap<>();
+    private static Map<String, Object> buildContent() {
+        Map<String, Object> map = new TreeMap<>();
         map.put("appId", AiPayConfig.APP_ID);
         map.put("merchantNo", AiPayConfig.MERCHANT_NO);
         map.put("agentId", AiPayConfig.AGENT_ID);
         map.put("reqNo", UUID.randomUUID().toString().replace("-", "").toUpperCase());
-        map.put("timestamp", String.valueOf(System.currentTimeMillis()));
+        map.put("timestamp", System.currentTimeMillis());
         map.put("nonce", randomHex(16));
         map.put("version", "1.0");
         map.put("signType", "SM3");
@@ -111,7 +111,7 @@ public class RokidQueryRefundGatewayDemo {
         return h;
     }
 
-    private static String buildSignString(Map<String, String> content) {
+    private static String buildSignString(Map<String, Object> content) {
         TreeMap<String, String> params = new TreeMap<>();
         putIfNotEmpty(params, "agentId", content.get("agentId"));
         putIfNotEmpty(params, "appId", content.get("appId"));
@@ -120,7 +120,7 @@ public class RokidQueryRefundGatewayDemo {
         putIfNotEmpty(params, "merchantNo", content.get("merchantNo"));
         putIfNotEmpty(params, "nonce", content.get("nonce"));
         putIfNotEmpty(params, "reqNo", content.get("reqNo"));
-        String ts = content.get("timestamp");
+        String ts = String.valueOf(content.get("timestamp"));
         if (ts != null && !ts.isEmpty()) params.put("timestamp", ts);
         putIfNotEmpty(params, "version", content.get("version"));
 

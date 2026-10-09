@@ -50,7 +50,7 @@ public class RokidCreateOrderGatewayDemo {
         String bizJson = buildBizJson();
 
         String bizContent = encodeBizContent(bizJson);
-        Map<String, String> content = buildContent();
+        Map<String, Object> content = buildContent();
         content.put("bizContent", bizContent);
 
         String signString = buildSignString(content);
@@ -62,7 +62,7 @@ public class RokidCreateOrderGatewayDemo {
         JSONObject body = new JSONObject(true);
         body.put("data", data);
 
-        Map<String, String> httpHeader = buildHttpHeader(content.get("appId"));
+        Map<String, String> httpHeader = buildHttpHeader(String.valueOf(content.get("appId")));
 
         System.out.println("=================== bizContent 明文 ===================");
         System.out.println(bizJson);
@@ -105,7 +105,7 @@ public class RokidCreateOrderGatewayDemo {
         // 设备信息（JSON 字符串）
         biz.put("deviceInfo", device.toJSONString());
         // 交易金额（分）—— 由用户提供
-        biz.put("tradeAmount", "__TRADE_AMOUNT__");
+        biz.put("tradeAmount", Long.valueOf("__TRADE_AMOUNT__"));
         // 下单时间：yyyyMMddHHmmss
         biz.put("createDate", createDate);
         // 收单商户号 —— 由用户提供
@@ -135,13 +135,13 @@ public class RokidCreateOrderGatewayDemo {
         return EncryptUtils.encryptForSm2WithBase64(bizJson, AiPayConfig.PFX_BASE64, AiPayConfig.PFX_PASSWORD, AiPayConfig.SM2_JD_PUB);
     }
 
-    private static Map<String, String> buildContent() {
-        Map<String, String> map = new TreeMap<>();
+    private static Map<String, Object> buildContent() {
+        Map<String, Object> map = new TreeMap<>();
         map.put("appId", AiPayConfig.APP_ID);
         map.put("merchantNo", AiPayConfig.MERCHANT_NO);
         map.put("agentId", AiPayConfig.AGENT_ID);
         map.put("reqNo", UUID.randomUUID().toString().replace("-", "").toUpperCase());
-        map.put("timestamp", String.valueOf(System.currentTimeMillis()));
+        map.put("timestamp", System.currentTimeMillis());
         map.put("nonce", randomHex(16));
         map.put("version", "1.0");
         map.put("signType", "SM3");
@@ -161,7 +161,7 @@ public class RokidCreateOrderGatewayDemo {
         return h;
     }
 
-    private static String buildSignString(Map<String, String> content) {
+    private static String buildSignString(Map<String, Object> content) {
         // content 层字段按 ASCII 升序排列，排除 sign / signType，空值不参与；
         // encType=SM2 时该字段进入签名串（防降级篡改）。
         TreeMap<String, String> params = new TreeMap<>();
@@ -172,7 +172,7 @@ public class RokidCreateOrderGatewayDemo {
         putIfNotEmpty(params, "merchantNo", content.get("merchantNo"));
         putIfNotEmpty(params, "nonce", content.get("nonce"));
         putIfNotEmpty(params, "reqNo", content.get("reqNo"));
-        String ts = content.get("timestamp");
+        String ts = String.valueOf(content.get("timestamp"));
         if (ts != null && !ts.isEmpty()) {
             params.put("timestamp", ts);
         }
@@ -188,9 +188,10 @@ public class RokidCreateOrderGatewayDemo {
         return sb.toString();
     }
 
-    private static void putIfNotEmpty(Map<String, String> map, String key, String value) {
-        if (value != null && !value.isEmpty()) {
-            map.put(key, value);
+    private static void putIfNotEmpty(Map<String, String> map, String key, Object value) {
+        String v = value == null ? null : String.valueOf(value);
+        if (v != null && !v.isEmpty()) {
+            map.put(key, v);
         }
     }
 
