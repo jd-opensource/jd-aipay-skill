@@ -1,0 +1,97 @@
+<mxfile host="drawio-plugin" modified="2026-07-24T08:23:56.728Z" agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/137.0.0.0 Safari/537.36" version="22.1.22" etag="uaOAW3SiucdUjy8pjB0n" type="embed">
+  <diagram name="10-merchant-integration" id="merchant-integration">
+    <mxGraphModel dx="0" dy="61" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="819" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="p-user" value="用户" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#444444;fillColor=#ffffff;fontSize=18;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="80" y="40" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p-merchant" value="商户" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#444444;fillColor=#ffffff;fontSize=18;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="560" y="40" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p-aipay" value="京东AI付" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#444444;fillColor=#ffffff;fontSize=18;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="1130" y="40" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="life-0" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#444444;strokeWidth=2;dashed=1;dashPattern=8 8;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="160" y="100" as="sourcePoint" />
+            <mxPoint x="160" y="760" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="life-1" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#444444;strokeWidth=2;dashed=1;dashPattern=8 8;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="640" y="100" as="sourcePoint" />
+            <mxPoint x="640" y="760" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="life-2" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#444444;strokeWidth=2;dashed=1;dashPattern=8 8;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1230" y="100" as="sourcePoint" />
+            <mxPoint x="1230" y="760" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="act-m" value="" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#444444;fillColor=#f9f9f9;" parent="1" vertex="1">
+          <mxGeometry x="632" y="230" width="16" height="460" as="geometry" />
+        </mxCell>
+        <mxCell id="act-a" value="" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#444444;fillColor=#f9f9f9;" parent="1" vertex="1">
+          <mxGeometry x="1222" y="340" width="16" height="280" as="geometry" />
+        </mxCell>
+        <mxCell id="m1" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#444444;strokeWidth=2;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="175" y="270" as="sourcePoint" />
+            <mxPoint x="632" y="270" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m1-label" value="① 发起业务请求" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;fillColor=#ffffff;fontSize=16;" parent="1" vertex="1">
+          <mxGeometry x="320" y="235" width="190" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="m5" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#444444;strokeWidth=2;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="648" y="440" as="sourcePoint" />
+            <mxPoint x="1222" y="440" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m5-label" value="⑤ 调用 AI付开放接口&lt;br&gt;传递 data.content（公共参数、sign、bizContent）" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;fillColor=#ffffff;fontSize=16;" parent="1" vertex="1">
+          <mxGeometry x="735" y="385" width="430" height="58" as="geometry" />
+        </mxCell>
+        <mxCell id="m8" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#444444;strokeWidth=2;dashed=1;dashPattern=8 8;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1222" y="620" as="sourcePoint" />
+            <mxPoint x="648" y="620" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m8-label" value="⑧ 返回业务响应&lt;br&gt;resultCode、resultDesc、sign、bizContent" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;fillColor=#ffffff;fontSize=16;" parent="1" vertex="1">
+          <mxGeometry x="785" y="565" width="390" height="58" as="geometry" />
+        </mxCell>
+        <mxCell id="m10" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#444444;strokeWidth=2;dashed=1;dashPattern=8 8;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="632" y="735" as="sourcePoint" />
+            <mxPoint x="175" y="735" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m10-label" value="⑩ 处理并展示业务结果" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;fillColor=#ffffff;fontSize=16;" parent="1" vertex="1">
+          <mxGeometry x="310" y="700" width="220" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="s2" value="② 组装业务参数 JSON" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;fillColor=#ffffff;fontSize=16;" parent="1" vertex="1">
+          <mxGeometry x="655" y="320" width="330" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" value="③ 生成 SM2 证书信封 bizContent" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;fillColor=#ffffff;fontSize=16;" parent="1" vertex="1">
+          <mxGeometry x="655" y="375" width="330" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="s4" value="④ 组装公共请求参数并生成 sign" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;fillColor=#ffffff;fontSize=16;" parent="1" vertex="1">
+          <mxGeometry x="655" y="500" width="330" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="s6" value="⑥ 验签 &amp; 解析业务参数" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;fillColor=#ffffff;fontSize=16;" parent="1" vertex="1">
+          <mxGeometry x="1245" y="505" width="330" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="s7" value="⑦ 执行业务处理" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;fillColor=#ffffff;fontSize=16;" parent="1" vertex="1">
+          <mxGeometry x="1245" y="560" width="330" height="34" as="geometry" />
+        </mxCell>
+        <mxCell id="s9" value="⑨ 解析 data.content，验签并读取 bizContent" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;fillColor=#ffffff;fontSize=16;" parent="1" vertex="1">
+          <mxGeometry x="655" y="680" width="330" height="34" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
