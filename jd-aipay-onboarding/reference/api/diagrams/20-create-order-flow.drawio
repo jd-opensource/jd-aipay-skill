@@ -1,0 +1,139 @@
+<mxfile host="drawio-plugin" modified="2026-07-24T10:00:00.000Z" agent="Claude" version="22.1.22" etag="createOrderFlow01" type="embed">
+  <diagram name="20-create-order-flow" id="create-order-flow">
+    <mxGraphModel dx="0" dy="61" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1000" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="p-user" value="用户" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#444444;fillColor=#ffffff;fontSize=18;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="80" y="40" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p-merchant" value="商户" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#444444;fillColor=#ffffff;fontSize=18;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="560" y="40" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="p-aipay" value="京东AI付" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#444444;fillColor=#ffffff;fontSize=18;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="1130" y="40" width="200" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="life-user" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#444444;strokeWidth=2;dashed=1;dashPattern=8 8;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="160" y="100" as="sourcePoint" />
+            <mxPoint x="160" y="920" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="life-merchant" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#444444;strokeWidth=2;dashed=1;dashPattern=8 8;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="640" y="100" as="sourcePoint" />
+            <mxPoint x="640" y="920" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="life-aipay" value="" style="endArrow=none;html=1;rounded=0;strokeColor=#444444;strokeWidth=2;dashed=1;dashPattern=8 8;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1230" y="100" as="sourcePoint" />
+            <mxPoint x="1230" y="920" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="act-m" value="" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#444444;fillColor=#f9f9f9;" parent="1" vertex="1">
+          <mxGeometry x="632" y="160" width="16" height="720" as="geometry" />
+        </mxCell>
+        <mxCell id="act-a" value="" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#444444;fillColor=#f9f9f9;" parent="1" vertex="1">
+          <mxGeometry x="1222" y="240" width="16" height="540" as="geometry" />
+        </mxCell>
+        <mxCell id="m1" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#444444;strokeWidth=2;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="175" y="180" as="sourcePoint" />
+            <mxPoint x="632" y="180" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m1-label" value="① 用户发起下单请求" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;fillColor=#ffffff;fontSize=16;" parent="1" vertex="1">
+          <mxGeometry x="290" y="148" width="250" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="m2" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#444444;strokeWidth=2;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="648" y="255" as="sourcePoint" />
+            <mxPoint x="1222" y="255" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m2-label" value="② 商户调用 createOrder 接口&lt;br&gt;传递 data.content（公共参数、sign、bizContent）" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;fillColor=#ffffff;fontSize=16;" parent="1" vertex="1">
+          <mxGeometry x="710" y="200" width="450" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="s3" value="③ 验签 &amp; 解析业务参数" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;fillColor=#ffffff;fontSize=16;" parent="1" vertex="1">
+          <mxGeometry x="1245" y="290" width="330" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="s4" value="④ 校验步骤1：授权关系校验" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;fillColor=#ffffff;fontSize=16;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="1245" y="340" width="330" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="alt-1" value="alt" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#888888;fillColor=none;fontSize=14;fontStyle=1;verticalAlign=top;align=left;spacingLeft=8;spacingTop=2;" parent="1" vertex="1">
+          <mxGeometry x="130" y="380" width="1180" height="105" as="geometry" />
+        </mxCell>
+        <mxCell id="alt-1-tag" value="[授权关系校验不通过]" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#888888;fillColor=#ffffff;fontSize=13;" parent="1" vertex="1">
+          <mxGeometry x="165" y="382" width="200" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="m5a" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#c0504d;strokeWidth=2;dashed=1;dashPattern=8 8;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1222" y="420" as="sourcePoint" />
+            <mxPoint x="648" y="420" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m5a-label" value="⑤ 返回未授权错误码" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;fillColor=#ffffff;fontSize=15;fontColor=#c0504d;" parent="1" vertex="1">
+          <mxGeometry x="820" y="392" width="230" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="m5b" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#c0504d;strokeWidth=2;dashed=1;dashPattern=8 8;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="632" y="460" as="sourcePoint" />
+            <mxPoint x="175" y="460" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m5b-label" value="提醒用户进行授权（终止本次流程）" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;fillColor=#ffffff;fontSize=15;fontColor=#c0504d;" parent="1" vertex="1">
+          <mxGeometry x="240" y="432" width="330" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="s6" value="⑥ 校验步骤2：是否已开通AI付" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;fillColor=#ffffff;fontSize=16;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="1245" y="510" width="330" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="alt-2" value="alt" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#888888;fillColor=none;fontSize=14;fontStyle=1;verticalAlign=top;align=left;spacingLeft=8;spacingTop=2;" parent="1" vertex="1">
+          <mxGeometry x="130" y="550" width="1180" height="105" as="geometry" />
+        </mxCell>
+        <mxCell id="alt-2-tag" value="[未开通AI付]" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=#888888;fillColor=#ffffff;fontSize=13;" parent="1" vertex="1">
+          <mxGeometry x="165" y="552" width="150" height="22" as="geometry" />
+        </mxCell>
+        <mxCell id="m7a" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#c0504d;strokeWidth=2;dashed=1;dashPattern=8 8;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1222" y="590" as="sourcePoint" />
+            <mxPoint x="648" y="590" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m7a-label" value="⑦ 返回未开通错误码" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;fillColor=#ffffff;fontSize=15;fontColor=#c0504d;" parent="1" vertex="1">
+          <mxGeometry x="820" y="562" width="230" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="m7b" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#c0504d;strokeWidth=2;dashed=1;dashPattern=8 8;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="632" y="630" as="sourcePoint" />
+            <mxPoint x="175" y="630" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m7b-label" value="提醒用户开通AI付（终止本次流程）" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;fillColor=#ffffff;fontSize=15;fontColor=#c0504d;" parent="1" vertex="1">
+          <mxGeometry x="240" y="602" width="330" height="26" as="geometry" />
+        </mxCell>
+        <mxCell id="s8" value="⑧ 校验通过，执行下单业务" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;fillColor=#ffffff;fontSize=16;" parent="1" vertex="1">
+          <mxGeometry x="1245" y="685" width="330" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="m9" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#444444;strokeWidth=2;dashed=1;dashPattern=8 8;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="1222" y="770" as="sourcePoint" />
+            <mxPoint x="648" y="770" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m9-label" value="⑨ 返回下单结果&lt;br&gt;resultCode、resultDesc、sign、bizContent" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;fillColor=#ffffff;fontSize=16;" parent="1" vertex="1">
+          <mxGeometry x="770" y="715" width="390" height="55" as="geometry" />
+        </mxCell>
+        <mxCell id="m10" value="" style="endArrow=block;html=1;rounded=0;strokeColor=#444444;strokeWidth=2;dashed=1;dashPattern=8 8;" parent="1" edge="1">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="632" y="860" as="sourcePoint" />
+            <mxPoint x="175" y="860" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="m10-label" value="⑩ 通知用户下单结果" style="rounded=0;whiteSpace=wrap;html=1;strokeColor=none;fillColor=#ffffff;fontSize=16;" parent="1" vertex="1">
+          <mxGeometry x="290" y="828" width="250" height="30" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

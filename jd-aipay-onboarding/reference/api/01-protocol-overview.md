@@ -193,6 +193,17 @@ AI付业务参数以 JSON 对象形式放入 `data.content` 中，网关透传�
 
 > 完整请求 URL = 基础地址 + 路径，如：`http://sse-pre.jd.com/api/pay-ai-agent/createOrder`
 
+### 4.1.1 商户接入类型（accessType）
+
+下单、支付结果查询、退款、退款结果查询四个外场请求接口均需在业务请求参数 `bizContent` 中传入 `accessType`，用于区分商户接入类型并路由不同下游接口。
+
+| 字段 | 必填 | 枚举值 | 说明 |
+|------|------|--------|------|
+| `accessType` | 是 | `SERVICE_MER` | 服务商模式，沿用服务商链路 |
+| `accessType` | 是 | `COMMON` | 普通商户模式，走普通商户链路 |
+
+说明：`accessType` 是外场 OpenAPI 业务协议字段，参与 `bizContent` 的编码/加密和外层签名保护。AI付以本次请求中的 `accessType` 为准进行 RPC 路由，不反查原订单校验接入类型一致性。支付 SDK 协议不感知服务商模式或普通商户模式，仍按现有 SDK 联调协议执行。
+
 ### 4.2 公共请求参数（data.content 内）
 
 

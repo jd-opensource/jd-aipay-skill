@@ -1,6 +1,6 @@
 ---
 name: jd-aipay-onboarding
-description: "京东 AI付一站式接入 Agent。Use this skill whenever the user wants to 接入/集成/联调/上线 京东AI付, says 让AI帮我接入AI付, mentions jdpay-aipay, AI付快速接入, 一站式接入, 沙箱联调, 生产配置替换, 上线验证, 产品开通, 实名认证, 证书密钥, 主动下一步引导, 证书转base64, pfx转base64, createOrder/queryPayResult/refund/queryRefundResult, iOS/Android SDK集成, JDPay.xcframework, AAR, registeredService/sign/pay, 标品支付/眼镜支付, or asks merchant-facing AI付 onboarding questions. It guides and executes both server-side integration (Java, Node.js, Python) and client-side SDK integration (iOS, Android); answers with external merchant-friendly language using the bundled QA/API references."
+description: "京东 AI付一站式接入 Agent。Use this skill whenever the user wants to 接入/集成/联调/上线 京东AI付, says 让AI帮我接入AI付, mentions jdpay-aipay, AI付快速接入, 一站式接入, 沙箱联调, 生产配置替换, 上线验证, 产品开通, 实名认证, 证书密钥, 主动下一步引导, 证书转base64, pfx转base64, createOrder/queryPayResult/refund/queryRefundResult/queryAiPayAccess, 支付通知/退款通知, NEED_CASHIER_PAY/降级扫码, iOS/Android SDK集成, JDPay.xcframework, AAR, registeredService/sign/pay, 标品支付/眼镜支付, or asks merchant-facing AI付 onboarding questions. It guides and executes both server-side integration (Java, Node.js, Python) and client-side SDK integration (iOS, Android); answers with external merchant-friendly language using the bundled QA/API references."
 ---
 
 # 京东 AI付一站式接入 Agent（服务端 + 客户端）
@@ -95,7 +95,7 @@ description: "京东 AI付一站式接入 Agent。Use this skill whenever the us
 
 ### 服务端接入相关
 - 产品认知、AI付/订阅区别、快速接入、一站式接入、产品开通、实名认证、证书密钥、上线验证、Skill 边界：优先查 `reference/product/product-and-onboarding-qa.md`。
-- 接口字段、签名、bizContent 加密、请求响应结构、支付状态、退款状态：优先查 `reference/api/`。
+- 接口字段、签名、bizContent 加密、请求响应结构、支付状态、退款状态、支付/退款异步通知、AI付准入状态（queryAiPayAccess）、错误码、降级扫码（NEED_CASHIER_PAY）：优先查 `reference/api/`。
 - Java / Node.js / Python 实现细节、依赖坑、HTTP header 大小写、加密互通、排障经验：只在代码集成或排障时查 `reference/implementation-notes/`。
 
 ### 客户端 SDK 集成相关
