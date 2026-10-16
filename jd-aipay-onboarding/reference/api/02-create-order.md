@@ -47,7 +47,7 @@
 | 用户ID | userId | 是 | String(64) | 商户端/平台端用户唯一标识（如Rokid用户ID）                                |
 | 交易金额 | tradeAmount | 是 | Long | 订单金额，单位：分，大于0的整数                                         |
 | 货币种类 | currency | 是 | String(8) | 固定值：`CNY`                                                |
-| 交易类型 | tradeType | 是 | String(8) | 固定值：`AI_PAY`                                             |
+| 交易类型 | tradeType | 是 | String(8) | 固定值：`Aipay`                                             |
 | 订单创建时间 | createDate | 是 | String(14) | 格式：yyyyMMddHHmmss                                        |
 | 订单失效时长 | expiryTime | 否 | String(16) | 单位：秒，默认7天，最大90天                                          |
 | 交易名称 | tradeSubject | 是 | String(128) | 订单标题/商品名称，展示在用户账单上                                       |
@@ -195,7 +195,7 @@
   "userId": "ROKID_USER_123",
   "tradeAmount": 9900,
   "currency": "CNY",
-  "tradeType": "AI_PAY",
+  "tradeType": "Aipay",
   "createDate": "20260512120000",
   "tradeSubject": "智能眼镜-服务订单",
   "tradeRemark": "用户购买Rokid服务",
