@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 #
-# render_server_example.sh — 一键渲染 AI付服务端示例工程（Java / Python / Node.js）
+# render_server_example.sh — 一键渲染 AI付服务端示例工程（Java / Python / Node.js / Go）
 #
 # 用法：
 #   render_server_example.sh --config <kv_file> --target <output_dir>
 #
 # kv_file 必填字段：
-#   language          语言: java（默认） | python | nodejs
+#   language          语言: java（默认） | python | nodejs | go
 #   interface         接口: createOrder | queryPayResult | refund | queryRefundResult
 #   env               环境: pre | prod | sandbox
 #   base_url          环境域名（不含 /api 与尾斜杠）, 如 https://ridepassfront-pre.jd.com；env=sandbox 时可省略（内置 https://fpitest.jd.com）
@@ -89,8 +89,8 @@ def need(k):
     return v
 
 language = kv.get('language', 'java').strip().lower() or 'java'
-if language not in ('java', 'python', 'nodejs'):
-    print(f"[ERR] language 非法: {language}, 应为 java|python|nodejs", file=sys.stderr); sys.exit(2)
+if language not in ('java', 'python', 'nodejs', 'go'):
+    print(f"[ERR] language 非法: {language}, 应为 java|python|nodejs|go", file=sys.stderr); sys.exit(2)
 
 iface = need('interface')
 env = need('env').lower()
@@ -146,6 +146,12 @@ PY_IFACE_MAP = {
     'refund':            ('refund_gateway_demo',              'pay-ai-agent/refund'),
     'queryRefundResult': ('query_refund_result_gateway_demo', 'pay-ai-agent/queryRefundResult'),
 }
+GO_IFACE_MAP = {
+    'createOrder':       ('create_order_gateway_demo',        'pay-ai-agent/createOrder'),
+    'queryPayResult':    ('query_pay_result_gateway_demo',    'pay-ai-agent/queryPayResult'),
+    'refund':            ('refund_gateway_demo',              'pay-ai-agent/refund'),
+    'queryRefundResult': ('query_refund_result_gateway_demo', 'pay-ai-agent/queryRefundResult'),
+}
 NODE_IFACE_MAP = {
     'createOrder':       ('create_order_gateway_demo',        'pay-ai-agent/createOrder'),
     'queryPayResult':    ('query_pay_result_gateway_demo',    'pay-ai-agent/queryPayResult'),
@@ -156,6 +162,8 @@ if language == 'java':
     iface_map = JAVA_IFACE_MAP
 elif language == 'python':
     iface_map = PY_IFACE_MAP
+elif language == 'go':
+    iface_map = GO_IFACE_MAP
 else:
     iface_map = NODE_IFACE_MAP
 if iface not in iface_map:
@@ -282,6 +290,18 @@ elif language == 'python':
     shutil.rmtree(os.path.join(target, 'tests'), ignore_errors=True)
     render_files(target, ('.py',))
     leftover = collect_leftover(target, ('.py',))
+elif language == 'go':
+    go_src = os.path.join(examples_dir, 'go-quickstart')
+    shutil.copytree(go_src, target)
+    cmd_dir = os.path.join(target, 'cmd')
+    for name in os.listdir(cmd_dir):
+        if name != main_entry:
+            full = os.path.join(cmd_dir, name)
+            shutil.rmtree(full, ignore_errors=True) if os.path.isdir(full) else os.remove(full)
+    # 删除 tests 目录避免向用户目录发布联调脚本
+    shutil.rmtree(os.path.join(target, 'tests'), ignore_errors=True)
+    render_files(target, ('.go', 'go.mod'))
+    leftover = collect_leftover(target, ('.go', 'go.mod'))
 else:
     # nodejs
     node_src = os.path.join(examples_dir, 'nodejs-quickstart')
@@ -362,6 +382,11 @@ elif language == 'python':
     print(f"       PYTHONPATH=src python -m aipay_demo.{main_entry}")
     print(f"     或直接运行文件:")
     print(f"       python3 src/aipay_demo/{main_entry}.py")
+elif language == 'go':
+    print(f"     入口: cmd/{main_entry}/main.go")
+    print(f"     运行:")
+    print(f"       cd {target}")
+    print(f"       go run ./cmd/{main_entry}")
 else:
     print(f"     入口文件: src/{main_entry}.js")
     print(f"     运行:")
