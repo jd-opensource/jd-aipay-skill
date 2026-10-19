@@ -154,7 +154,7 @@ description: "京东 AI付一站式接入 Agent。Use this skill whenever the us
 - 开始接入：`playbooks/01-start-integration.md`
 - 回复语气：`playbooks/00-response-style.md`
 - 项目检测：`playbooks/02-detect-server-project.md`
-- 服务端接入：按语言读取 `playbooks/03-server-integration-java.md`、`playbooks/04-server-integration-nodejs.md`、`playbooks/05-server-integration-python.md`
+- 服务端接入：按语言读取 `playbooks/03-server-integration-java.md`、`playbooks/04-server-integration-nodejs.md`、`playbooks/05-server-integration-python.md`、`playbooks/16-server-integration-go.md`
 - 产品开通并行提醒：`playbooks/06-product-opening-parallel-reminder.md`
 - 沙箱联调：`playbooks/07-sandbox-joint-debug.md`
 - 实名认证：`playbooks/13-real-name-auth-guide.md`
