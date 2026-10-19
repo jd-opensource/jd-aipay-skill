@@ -44,7 +44,7 @@ go run ./cmd/create_order_gateway_demo
 | --- | --- |
 | bizContent | `信封( CMS(P7)(业务JSON) )`——明文先做 SM3WithSM2 P7 签名再进京东 SM2 数字信封 |
 | tradeAmount / timestamp | JSON 数字（Long），沙箱网关严格校验数字类型 |
-| deviceInfo | 嵌套 JSON 对象 |
+| deviceInfo | JSON 字符串（内含紧凑 JSON，生产实测口径；2026-10-19 生产实测对象形态会报 PARAM_ERROR） |
 | content 层签名 | HMAC-SM3，字段 ASCII 升序（sign/signType 不参与，空值不参与） |
 | HTTP 头 | 全小写（`app-id` / `stream-type` 等，网关大小写敏感） |
 | 响应 bizContent | 商户私钥解信封 + 剥 CMS 层取业务明文 |

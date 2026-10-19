@@ -48,7 +48,7 @@ type deviceInfo struct {
 type createOrderBiz struct {
 	TradeSubject  string          `json:"tradeSubject"`
 	ClientType    string          `json:"clientType"`
-	DeviceInfo    json.RawMessage `json:"deviceInfo"`
+	DeviceInfo    string          `json:"deviceInfo"`
 	TradeAmount   int64           `json:"tradeAmount"`
 	CreateDate    string          `json:"createDate"`
 	AcqMerchantNo string          `json:"acqMerchantNo"`
@@ -87,7 +87,7 @@ func main() {
 	biz := createOrderBiz{
 		TradeSubject:  "AI付测试订单",
 		ClientType:    "APP",
-		DeviceInfo:    deviceBytes,
+		DeviceInfo:    string(deviceBytes),
 		TradeAmount:   tradeAmount,
 		CreateDate:    time.Now().Format("20060102150405"),
 		AcqMerchantNo: cfg.AcqMerchantNo,

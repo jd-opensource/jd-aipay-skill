@@ -25,8 +25,9 @@
 
 - **零第三方依赖**：国密算法（SM2/SM3/SM4）、数字信封、PFX、CMS 均为纯 Go +
   标准库实现，不引入任何 module 依赖，`go build` 即用。
-- 报文口径：`tradeAmount`/`timestamp` 为 JSON 数字（Long），`deviceInfo` 为嵌套
-  JSON 对象，HTTP 头名全小写（网关大小写敏感）。
+- 报文口径（2026-10-19 生产实测）：`tradeAmount`/`timestamp` 为 JSON 数字（Long），
+  `deviceInfo` 为 JSON 字符串（内含紧凑 JSON，对象形态会被拒 PARAM_ERROR），
+  HTTP 头名全小写（网关大小写敏感）。
 
 ## 参考资产
 
