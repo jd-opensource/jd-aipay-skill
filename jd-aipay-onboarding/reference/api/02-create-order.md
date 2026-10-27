@@ -1,6 +1,6 @@
 # AI下单接口 - createOrder
 
-> 版本：v1.2（草案，待协议串评） | 更新时间：2026-09-14
+> 版本：v1.3（草案，待协议串评） | 更新时间：2026-10-19
 >
 > **【v1.2 变更说明 2026-09-14】** 本次变更（详情见第 6 章迭代记录与对应章节）：① 业务请求参数新增可选 `receiverInfo`（收货人信息），并补充 `goodsInfo` / `riskInfo` 的对象结构说明（见 2.2–2.4）；② bizContent 响应新增 cashierUrl（降级收银台URL）、notAuthType（未开通细分类型）；③ tradeNo / guideText 返回条件扩展；④ 新增 resultCode NEED_CASHIER_PAY（超额或风控不通过，降级外单扫码支付）。
 
@@ -54,7 +54,7 @@
 | 交易描述 | tradeRemark | 是 | String(256) | 订单具体描述信息                                                 |
 | 异步通知地址 | notifyUrl | 是 | String(256) | 支付完成后异步通知商户支付结果的URL，须公网可达。注：服务商模式下传入服务商的通知URL，由服务商负责通知商户 |
 | 同步跳转地址 | pageBackUrl | 否 | String(256) | 支付成功后跳转URL（仅H5场景使用）                                      |
-| 客户端类型 | clientType | 否 | String(15) | 客户端标识：`H5` / `APP`                         |
+| 客户端类型 | clientType | 否 | String(15) | 客户端标识：`AI_DEVICE` / `H5` / `APP`（`AI_DEVICE` 指眼镜、音箱等 AI 智能设备终端） |
 | 商品信息 | goodsInfo | 否 | String(2048) | 商品信息列表，JSON格式，结构见 2.2                                      |
 | 收货人信息 | receiverInfo | 否 | String(2048) | 收货人信息，JSON格式，结构见 2.3                              |
 | 用户IP | userIp | 否 | String(64) | 用户终端IP，支持IPv4/IPv6                                       |
@@ -334,6 +334,7 @@
 
 | 版本 | 日期 | 变更内容 |
 |------|------|----------|
+| v1.3 | 2026-10-19 | 业务请求参数 `clientType` 枚举补充 `AI_DEVICE`（AI 智能设备：眼镜、音箱等），与既有示例值及错误码说明对齐；生产实测以 `APP` / `AI_DEVICE` 均可正常受理 |
 | v1.2 | 2026-09-14 | 【草案待串评】bizContent 响应新增可选字段 `cashierUrl`（降级收银台URL，String(512)）、`notAuthType`（未开通细分类型：NOT_BOUND/NOT_OPENED）；`tradeNo`、`guideText` 返回条件扩展至新结果码；新增 resultCode `NEED_CASHIER_PAY`（已开通已绑定但当笔超额或风控不通过，降级外单 tradeType=GEN 扫码支付）；业务请求参数新增可选 `receiverInfo`（收货人信息，String(2048)）；新增 2.2–2.4 `goodsInfo` / `receiverInfo` / `riskInfo` 对象结构说明；新增 4.4 降级扫码响应示例 |
 | v1.1 | 2026-06-18 | 公共请求/响应参数新增必填字段 `agentId`（Agent 身份标识），用于 Agent 级别的策略路由、风控与数据统计；详见协议总览 4.2 / 4.3 |
 | v1.0 | 2026-05-12 | 接口首次发布 |
